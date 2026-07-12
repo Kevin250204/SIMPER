@@ -1,0 +1,181 @@
+.profil-container {
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 120px 20px 60px;
+}
+
+.profil-container h1 {
+    font-size: 42px;
+
+    margin-bottom: 10px;
+}
+
+.profil-container p {
+    color: #666;
+
+    margin-bottom: 40px;
+}
+
+.profil-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1.4fr;
+
+    gap: 35px;
+
+    align-items: start;
+}
+
+.card {
+    background: #fff;
+
+    border-radius: 24px;
+
+    padding: 30px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+    margin-bottom: 35px;
+}
+
+.card h2 {
+    margin-bottom: 25px;
+
+    font-size: 26px;
+}
+
+.denda-box {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 18px;
+
+    margin-bottom: 20px;
+}
+
+.denda-box h3 {
+    font-size: 32px;
+
+    margin-top: 10px;
+}
+
+.denda-box.danger {
+    border-color: #ffd4d4;
+
+    background: #fff7f7;
+}
+
+.badge {
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+.selesai {
+    background: #d9ffe4;
+
+    color: #00753d;
+}
+
+.danger {
+    background: #ffe0e0;
+
+    color: #d10028;
+}
+
+form label {
+    display: block;
+
+    margin-top: 18px;
+
+    margin-bottom: 8px;
+
+    font-weight: 600;
+}
+
+form input {
+    width: 100%;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    border: 1px solid #ddd;
+
+    font-size: 15px;
+}
+
+form button {
+    margin-top: 25px;
+
+    width: 100%;
+
+    padding: 16px;
+
+    background: #111;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+form button:hover {
+    background: #000;
+}
+
+.alert-success {
+    background: #dff7df;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+
+    color: #0d7a33;
+}
+
+.alert-error {
+    background: #ffe2e2;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+
+    color: #d60000;
+}
+
+@media (max-width: 900px) {
+    .profil-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.profile-card {
+    margin-bottom: 35px;
+}
