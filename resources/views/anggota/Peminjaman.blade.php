@@ -6,15 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pagination.css') }}">
 
     <title>Peminjaman Koleksi</title>
 
     <style>
-        * {
+        body {
+
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container,
+        .container * {
+
+            box-sizing: border-box;
+
         }
 
         body {
@@ -141,37 +149,58 @@
             padding: 15px 0;
         }
 
-        .status-proses {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 6px 12px;
-            background: #fff7ed;
-            color: #ea580c;
-            border-radius: 20px;
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 120px;
+
+            padding: 8px 16px;
+
+            border-radius: 999px;
+
             font-size: 13px;
             font-weight: 600;
+
+            text-align: center;
+        }
+
+        .status-menunggu {
+            background: #FFF7ED;
+            color: #EA580C;
         }
 
         .status-dipinjam {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 6px 12px;
-            background: #ecfdf5;
-            color: #0F8248;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            background: #ECFDF5;
+            color: #15803D;
         }
 
-        .status-selesai {
-            color: #2563eb;
-            font-weight: 700;
+        .status-dikembalikan {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .status-terlambat {
+            background: #FEE2E2;
+            color: #DC2626;
         }
 
         .status-ditolak {
-            color: #dc2626;
-            font-weight: 700;
+            background: #FEE2E2;
+            color: #DC2626;
         }
+
+        .status-rusak {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-hilang {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
 
         .alert-success {
             background: #dcfce7;
@@ -239,6 +268,292 @@
             padding: 8px 14px;
             border-radius: 20px;
             font-weight: 600;
+        }
+
+        .status-perpanjang {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 18px;
+
+            border-radius: 10px;
+
+            background: #e8f8ec;
+            color: #198754;
+
+            font-weight: 600;
+            font-size: 14px;
+
+            border: 1px solid #b7e4c7;
+        }
+
+        .riwayat-card {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            padding: 18px 22px;
+
+            border-bottom: 1px solid #ededed;
+
+        }
+
+        .riwayat-cover img {
+
+            width: 62px;
+
+            height: 86px;
+
+            object-fit: cover;
+
+            border-radius: 8px;
+
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+
+        }
+
+        .riwayat-info {
+
+            flex: 1;
+
+        }
+
+        .riwayat-info h3 {
+
+            margin: 0;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            color: #222;
+
+        }
+
+        .riwayat-info p {
+
+            margin-top: 4px;
+
+            margin-bottom: 8px;
+
+            color: #7d7d7d;
+
+            font-size: 14px;
+
+        }
+
+        .riwayat-tanggal {
+
+            display: flex;
+
+            gap: 22px;
+
+            font-size: 13px;
+
+            color: #777;
+
+        }
+
+        .riwayat-status {
+
+            width: 150px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        .riwayat-toolbar {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin: 25px 0 20px;
+
+            flex-wrap: wrap;
+
+        }
+
+        .filter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 22px;
+
+            border: 1px solid #d9d9d9;
+            border-radius: 999px;
+
+            background: #fff;
+            color: #333;
+
+            text-decoration: none;
+
+            transition: .2s;
+        }
+
+        .filter:hover {
+            background: #f4f4f4;
+        }
+
+        .filter.active {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+        .riwayat-search {
+
+            flex: 1;
+
+        }
+
+        .riwayat-search input {
+
+            width: 100%;
+
+            height: 46px;
+
+            border-radius: 12px;
+
+            border: 1px solid #ddd;
+
+            padding: 0 16px;
+
+            font-size: 15px;
+
+        }
+
+        .riwayat-search-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 24px;
+
+        }
+
+        .riwayat-total {
+
+            white-space: nowrap;
+
+            font-size: 14px;
+
+            color: #777;
+
+        }
+
+        .search-form {
+            flex: 1;
+            display: flex;
+            gap: 14px;
+        }
+
+        .search-form button {
+
+            width: 130px;
+
+            height: 48px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #16a34a;
+
+            color: #fff;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+        }
+
+        .search-form button:hover {
+            background: #14843b;
+        }
+
+        .search-input {
+
+            flex: 1;
+
+            height: 48px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 12px;
+
+            padding: 0 18px;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+        .search-input:focus {
+
+            border-color: #16a34a;
+
+        }
+
+        .filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 24px;
+            height: 24px;
+
+            margin-left: 8px;
+
+            background: #f1f5f9;
+            color: #555;
+
+            border-radius: 50%;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .filter.active .filter-count {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .riwayat-denda {
+
+            display: inline-block;
+
+            margin-top: 10px;
+
+            padding: 5px 10px;
+
+            background: #FEE2E2;
+
+            color: #DC2626;
+
+            border: 1px solid #FCA5A5;
+
+            border-radius: 999px;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
         }
     </style>
 </head>
@@ -338,17 +653,26 @@
 
                         </div>
 
-                        <form action="{{ route('anggota.perpanjang', $item->id_peminjaman) }}" method="POST">
+                        @if($item->sudah_diperpanjang == 0)
+                            <form action="{{ route('anggota.perpanjang', $item->id_peminjaman) }}" method="POST">
 
-                            @csrf
+                                @csrf
 
-                            <button type="submit" class="btn-perpanjang">
+                                <button type="submit" class="btn-perpanjang">
 
-                                Perpanjang
+                                    Perpanjang
 
-                            </button>
+                                </button>
 
-                        </form>
+                            </form>
+
+                        @else
+
+                            <div class="status-perpanjang">
+                                ✓ Sudah Diperpanjang
+                            </div>
+
+                        @endif
 
                     </div>
 
@@ -360,126 +684,184 @@
 
         <br><br><br>
 
-        <div class="section-header">
+        <div id="riwayat" class="section-header">
 
             <div class="section-title">
-                📚 Riwayat Peminjaman
+                Riwayat Peminjaman
+            </div>
+
+        </div>
+
+        <div class="riwayat-toolbar">
+
+            <a href="{{ route('anggota.peminjaman') }}#riwayat" class="filter {{ request('status') ? '' : 'active' }}">
+                Semua
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['semua'] }}
+                </span>
+            </a>
+
+            <a href="{{ route('anggota.peminjaman', [
+    'status' => 'dikembalikan',
+    'search' => request('search')
+]) }}#riwayat" class="filter {{ request('status') == 'dikembalikan' ? 'active' : '' }}">
+                Dikembalikan
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['dikembalikan'] }}
+                </span>
+            </a>
+
+            <a href="{{ route('anggota.peminjaman', [
+    'status' => 'terlambat',
+    'search' => request('search')
+]) }}#riwayat" class="filter {{ request('status') == 'terlambat' ? 'active' : '' }}">
+                Terlambat
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['terlambat'] }}
+                </span>
+            </a>
+
+            <a href="{{ route('anggota.peminjaman', [
+    'status' => 'ditolak',
+    'search' => request('search')
+]) }}#riwayat" class="filter {{ request('status') == 'ditolak' ? 'active' : '' }}">
+                Ditolak
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['ditolak'] }}
+                </span>
+            </a>
+
+            <a href="{{ route('anggota.peminjaman', [
+    'status' => 'hilang',
+    'search' => request('search')
+]) }}#riwayat" class="filter {{ request('status') == 'hilang' ? 'active' : '' }}">
+                Hilang
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['hilang'] }}
+                </span>
+            </a>
+
+            <a href="{{ route('anggota.peminjaman', [
+    'status' => 'rusak',
+    'search' => request('search')
+]) }}#riwayat" class="filter {{ request('status') == 'rusak' ? 'active' : '' }}">
+                Rusak
+
+                <span class="filter-count">
+                    {{ $jumlahStatus['rusak'] }}
+                </span>
+            </a>
+
+        </div>
+
+        <div class="riwayat-search-row">
+
+            <form method="GET" action="{{ route('anggota.peminjaman') }}#riwayat" class="search-form">
+
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+
+                <input class="search-input" type="text" name="search" value="{{ request('search') }}"
+                    placeholder="Cari judul koleksi">
+
+                <button type="submit">
+                    Cari
+                </button>
+
+            </form>
+
+            <div class="riwayat-total">
+                Menemukan {{ $riwayat->total() }} data
             </div>
 
         </div>
 
         <div class="table-box">
 
-            <table>
+            @foreach($riwayat as $detail)
 
-                <thead>
-                    <tr>
-                        <th>Koleksi</th>
-                        <th>Tanggal Kembali</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
+                <div class="riwayat-card">
 
-                <tbody>
+                    <div class="riwayat-cover">
 
-                    @foreach($riwayat as $item)
+                        <img src="{{ asset('uploads/koleksi/' . $detail->koleksi->gambar) }}" alt="cover">
 
-                        <tr>
+                    </div>
 
-                            <td>
+                    <div class="riwayat-info">
 
-                                @foreach($item->detail as $detail)
+                        <h3>
 
-                                    <div class="riwayat-book">
+                            {{ $detail->koleksi->judul_koleksi }}
 
-                                        @if($detail->koleksi?->gambar)
+                        </h3>
 
-                                            <img src="{{ asset('uploads/koleksi/' . $detail->koleksi->gambar) }}"
-                                                class="riwayat-cover">
+                        <p>
 
-                                        @else
+                            {{ $detail->koleksi->penulis }}
 
-                                            <img src="{{ asset('images/no-cover.png') }}" class="riwayat-cover">
+                        </p>
 
-                                        @endif
+                        <div class="riwayat-tanggal">
 
-                                        <div>
+                            <span>
 
-                                            <div class="riwayat-judul">
+                                Pinjam :
+                                {{ $detail->peminjaman->tanggal_pinjam }}
 
-                                                {{ $detail->koleksi->judul_koleksi }}
+                            </span>
 
-                                            </div>
+                            <span>
 
-                                            <div class="riwayat-penulis">
+                                Kembali :
+                                {{ $detail->peminjaman->tanggal_kembali }}
 
-                                                {{ $detail->koleksi->penulis }}
+                            </span>
 
-                                            </div>
+                        </div>
 
-                                        </div>
+                        @if(in_array($detail->status_item, ['terlambat', 'hilang', 'rusak']))
 
-                                    </div>
+                            <div class="riwayat-denda">
 
-                                @endforeach
+                                Denda :
+                                Rp {{ number_format($detail->jumlah_denda, 0, ',', '.') }}
 
-                            </td>
+                            </div>
 
-                            <td>
-                                {{ $item->tanggal_kembali }}
-                            </td>
+                        @endif
 
-                            <td>
+                    </div>
 
-                                @if($detail->status_item == 'menunggu')
+                    <div class="riwayat-status">
 
-                                    <span class="status-proses">
-                                        Menunggu Persetujuan
-                                    </span>
+                        @php
 
-                                @elseif($detail->status_item == 'dipinjam')
+                            $status = strtolower($detail->status_item);
 
-                                    <span class="status-dipinjam">
-                                        Dipinjam
-                                    </span>
+                        @endphp
 
-                                @elseif($detail->status_item == 'dikembalikan')
+                        <span class="status-badge status-{{ $status }}">
 
-                                    <span class="status-selesai">
-                                        Dikembalikan
-                                    </span>
+                            {{ ucfirst($detail->status_item) }}
 
-                                @elseif($detail->status_item == 'terlambat')
+                        </span>
 
-                                    <span class="status-ditolak">
-                                        Terlambat
-                                    </span>
+                    </div>
 
-                                @elseif($detail->status_item == 'hilang')
+                </div>
 
-                                    <span class="status-ditolak">
-                                        Hilang
-                                    </span>
-
-                                @elseif($detail->status_item == 'rusak')
-
-                                    <span class="status-ditolak">
-                                        Rusak
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-                        </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
+            @endforeach
 
         </div>
+
+        <x-pagination :data="$riwayat" anchor="riwayat" />
 
     </div>
 

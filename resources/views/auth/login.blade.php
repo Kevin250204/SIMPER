@@ -19,6 +19,10 @@
 
             {{-- ERROR LOGIN --}}
 
+
+
+
+
             <form method="POST" action="/login">
                 @csrf
 
@@ -29,12 +33,26 @@
                 @endif
 
                 <label>Username</label>
-                <input type="text" name="username" placeholder="Masukkan username">
+                <input type="text" name="username" placeholder="Masukkan username" value="{{ old('username') }}"
+                    class="@error('username') input-error @enderror">
+
+                @error('username')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Masukkan password">
+                <input type="password" name="password" placeholder="Masukkan password"
+                    class="@error('password') input-error @enderror">
+
+                @error('password')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <button type="submit">Masuk</button>
+
+                <a href="{{ route('landing') }}" class="btn-back">
+                    ← Kembali
+                </a>
             </form>
 
         </div>

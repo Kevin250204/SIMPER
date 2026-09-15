@@ -271,6 +271,31 @@
             background: #15803d;
             transform: translateY(-2px);
         }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #fecaca;
+        }
+
+        .text-error {
+            color: #dc2626;
+            font-size: 13px;
+            display: block;
+            margin-top: 6px;
+        }
     </style>
 </head>
 
@@ -284,9 +309,21 @@
 
             @include('partials.navbar-admin')
 
+            @if(session('success'))
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="header">
 
-                <h2>➕ Tambah Peminjaman</h2>
+                <h2>Tambah Peminjaman</h2>
 
                 <p>
                     Pilih anggota dan koleksi yang akan dipinjam
@@ -294,13 +331,21 @@
 
             </div>
 
+            @if ($errors->any())
+                <div class="alert-error">
+                    @foreach($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="card">
 
                 <form action="{{ route('admin.peminjaman.cari-anggota') }}" method="GET" class="search-box"
                     onsubmit="resetPilihan()">
 
-                    <input type="text" name="keyword" placeholder="Cari Nama atau NIS Anggota..."
-                        value="{{ request('keyword') }}">
+                    <input type="text" name="anggota" value="{{ $keywordAnggota ?? '' }}"
+                        placeholder="Cari Nama atau NIS Anggota">
 
                     <button type="submit">
 
@@ -359,7 +404,8 @@
 
                         <div class="search-box">
 
-                            <input type="text" name="judul" placeholder="Cari judul koleksi">
+                            <input type="text" name="koleksi" value="{{ old('koleksi', request('koleksi')) }}"
+                                placeholder="Cari judul koleksi">
 
                             <button type="submit">
 
@@ -386,10 +432,10 @@
 
                         <table
                             style="
-                                                                                                                                                                    width:100%;
-                                                                                                                                                                    border-collapse:collapse;
-                                                                                                                                                                    margin-bottom:20px;
-                                                                                                                                                                ">
+                                                                                                                                                                                                                    width:100%;
+                                                                                                                                                                                                                    border-collapse:collapse;
+                                                                                                                                                                                                                    margin-bottom:20px;
+                                                                                                                                                                                                                ">
 
                             <thead>
 
@@ -437,10 +483,11 @@
 
                                             <td>
 
-                                                <button type="button" class="btn-pinjam" onclick="tambahKoleksi(
-                                                                                                                                '{{ $koleksi->id_koleksi }}',
-                                                                                                                                '{{ addslashes($koleksi->judul_koleksi) }}'
-                                                                                                                            )">
+                                                <button type="button" class="btn-pinjam"
+                                                    onclick="tambahKoleksi(
+                                                                                                                                                                                                                                                                                '{{ $koleksi->id_koleksi }}',
+                                                                                                                                                                                                                                                                                '{{ addslashes($koleksi->judul_koleksi) }}'
+                                                                                                                                                                                                                                                                            )">
 
                                                     Pinjam
 
@@ -472,11 +519,11 @@
 
                         <div
                             style="
-                                                                                                                                                                    background:#f8fafc;
-                                                                                                                                                                    border-radius:12px;
-                                                                                                                                                                    padding:16px;
-                                                                                                                                                                    margin-bottom:20px;
-                                                                                                                                                                ">
+                                                                                                                                                                                                                    background:#f8fafc;
+                                                                                                                                                                                                                    border-radius:12px;
+                                                                                                                                                                                                                    padding:16px;
+                                                                                                                                                                                                                    margin-bottom:20px;
+                                                                                                                                                                                                                ">
 
                             <h3 style="margin-top:0;">
                                 📚 Koleksi Dipilih

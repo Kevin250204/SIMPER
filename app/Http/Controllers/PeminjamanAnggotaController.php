@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\Koleksi;
 use App\Models\Peminjaman;
 use App\Models\DetailPeminjaman;
 use Carbon\Carbon;
+use App\Models\JenisKoleksi;
+
 
 
 class PeminjamanAnggotaController extends Controller
@@ -21,7 +24,7 @@ class PeminjamanAnggotaController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function index()
+    public function index(Request $request)
     {
 
         DetailPeminjaman::where('status_item', 'dipinjam')
@@ -84,40 +87,91 @@ class PeminjamanAnggotaController extends Controller
                 );
         }
 
-        $riwayat = Peminjaman::with([
-            'detail.koleksi'
+        $riwayatQuery = DetailPeminjaman::with([
+            'koleksi',
+            'peminjaman'
         ])
-            ->where(
-                'id_anggota',
-                session('id_anggota')
-            )
-            ->whereHas('detail')
-            ->latest()
-            ->take(5)
-            ->get();
+            ->whereHas('peminjaman', function ($q) {
 
-        foreach ($riwayat as $item) {
-
-            $tanggalKembali =
-                Carbon::parse(
-                    $item->tanggal_kembali
-                )->startOfDay();
-
-            $hariIni =
-                Carbon::today();
-
-            $item->sisa_hari =
-                $hariIni->diffInDays(
-                    $tanggalKembali,
-                    false
+                $q->where(
+                    'id_anggota',
+                    session('id_anggota')
                 );
-        }
+
+            });
+
+        $riwayat = DetailPeminjaman::with([
+            'koleksi',
+            'peminjaman'
+        ])
+            ->whereHas('peminjaman', function ($q) {
+
+                $q->where(
+                    'id_anggota',
+                    session('id_anggota')
+                );
+
+            })
+            ->when($request->filled('search'), function ($query) use ($request) {
+
+                $query->whereHas('koleksi', function ($q) use ($request) {
+
+                    $q->where(
+                        'judul_koleksi',
+                        'like',
+                        '%' . $request->search . '%'
+                    );
+
+                });
+
+            })
+
+            ->when($request->filled('status'), function ($query) use ($request) {
+
+                $query->where(
+                    'status_item',
+                    $request->status
+                );
+
+            })
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        $jumlahStatus = [
+
+            'semua' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->count(),
+
+            'dikembalikan' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->where('status_item', 'dikembalikan')->count(),
+
+            'terlambat' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->where('status_item', 'terlambat')->count(),
+
+            'ditolak' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->where('status_item', 'ditolak')->count(),
+
+            'hilang' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->where('status_item', 'hilang')->count(),
+
+            'rusak' => DetailPeminjaman::whereHas('peminjaman', function ($q) {
+                $q->where('id_anggota', session('id_anggota'));
+            })->where('status_item', 'rusak')->count(),
+        ];
+
 
         return view(
             'anggota.peminjaman',
             compact(
                 'aktif',
-                'riwayat'
+                'riwayat',
+                'jumlahStatus'
             )
         );
     }
@@ -131,6 +185,22 @@ class PeminjamanAnggotaController extends Controller
     {
 
         $idAnggota = session('id_anggota');
+
+        $masihAdaTerlambat = DetailPeminjaman::where('status_item', 'terlambat')
+            ->whereHas('peminjaman', function ($q) use ($idAnggota) {
+                $q->where('id_anggota', $idAnggota)
+                    ->where('status_peminjaman', 'dipinjam');
+            })
+            ->exists();
+
+        if ($masihAdaTerlambat) {
+            return redirect()
+                ->route('anggota.peminjaman')
+                ->with(
+                    'error',
+                    'Tidak dapat melakukan peminjaman karena masih terdapat koleksi yang terlambat dan belum dikembalikan.'
+                );
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -209,15 +279,14 @@ class PeminjamanAnggotaController extends Controller
             });
         }
 
-        if (
-            $request->filled('jenis')
-            && $request->jenis != 'semua'
-        ) {
+        if ($request->filled('jenis') && $request->jenis != 'semua') {
 
-            $query->where(
-                'jenis_koleksi',
-                $request->jenis
-            );
+            $query->whereHas('kategori.jenis', function ($q) use ($request) {
+
+                $q->where('nama_jenis', $request->jenis);
+
+            });
+
         }
 
         $koleksis = $query
@@ -229,11 +298,8 @@ class PeminjamanAnggotaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $jenisKoleksi = Koleksi::select(
-            'jenis_koleksi'
-        )
-            ->distinct()
-            ->pluck('jenis_koleksi');
+        $jenisKoleksi = JenisKoleksi::orderBy('nama_jenis')
+            ->pluck('nama_jenis');
 
         return view(
             'anggota.peminjaman-create',
@@ -264,6 +330,20 @@ class PeminjamanAnggotaController extends Controller
         ]);
 
         $idAnggota = session('id_anggota');
+
+        $masihAdaTerlambat = DetailPeminjaman::where('status_item', 'terlambat')
+            ->whereHas('peminjaman', function ($q) use ($idAnggota) {
+                $q->where('id_anggota', $idAnggota)
+                    ->where('status_peminjaman', 'dipinjam');
+            })
+            ->exists();
+
+        if ($masihAdaTerlambat) {
+            return back()->with(
+                'error',
+                'Tidak dapat melakukan peminjaman karena masih terdapat koleksi yang terlambat dan belum dikembalikan.'
+            );
+        }
 
         $totalAktif = DB::table('detail_peminjaman')
             ->join(
@@ -456,6 +536,15 @@ class PeminjamanAnggotaController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
+        if ($peminjaman->sudah_diperpanjang == 1) {
+
+            return back()->with(
+                'error',
+                'Peminjaman hanya dapat diperpanjang satu kali.'
+            );
+
+        }
+
         /*
         |--------------------------------------------------------------------------
         | VALIDASI PEMILIK PEMINJAMAN
@@ -493,6 +582,8 @@ class PeminjamanAnggotaController extends Controller
             Carbon::parse(
                 $peminjaman->tanggal_kembali
             )->addDays(7);
+
+        $peminjaman->sudah_diperpanjang = 1;
 
         $peminjaman->update([
 
@@ -588,11 +679,22 @@ class PeminjamanAnggotaController extends Controller
 
     public function ubahPassword(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'password_lama' => 'required',
-            'password_baru' => 'required|min:6',
-            'password_baru_confirmation' => 'required|same:password_baru',
+            'password_baru' => 'required|min:6|confirmed',
+        ], [
+            'password_lama.required' => 'Password lama wajib diisi.',
+            'password_baru.required' => 'Password baru wajib diisi.',
+            'password_baru.min' => 'Password baru minimal 6 karakter.',
+            'password_baru.confirmed' => 'Konfirmasi password baru tidak sesuai.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->to(url()->previous() . '#ubah-password')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         // Ambil user yang sedang login dari session
         $user = User::find(session('id_user'));
@@ -613,10 +715,21 @@ class PeminjamanAnggotaController extends Controller
             )
         ) {
 
-            return back()->with(
-                'error',
-                'Password lama yang Anda masukkan salah.'
-            );
+            return redirect()
+                ->to(url()->previous() . '#ubah-password')
+                ->withErrors([
+                    'password_lama' => 'Password lama yang Anda masukkan salah.'
+                ])
+                ->withInput();
+        }
+
+        if (Hash::check($request->password_baru, $user->password)) {
+            return redirect()
+                ->to(url()->previous() . '#ubah-password')
+                ->withErrors([
+                    'password_baru' => 'Password baru tidak boleh sama dengan password lama.'
+                ])
+                ->withInput();
         }
 
         // Simpan password baru
@@ -626,9 +739,11 @@ class PeminjamanAnggotaController extends Controller
 
         $user->save();
 
-        return back()->with(
-            'success',
-            'Password berhasil diubah.'
-        );
+        return redirect()
+            ->to(url()->previous() . '#ubah-password')
+            ->with(
+                'success',
+                'Password berhasil diubah.'
+            );
     }
 }

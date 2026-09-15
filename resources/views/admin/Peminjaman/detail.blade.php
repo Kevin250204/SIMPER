@@ -6,330 +6,359 @@
     <title>Detail Peminjaman</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f4f6f8;
-        }
-
-        /* ===== LAYOUT ===== */
-        .wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 240px;
-            background: linear-gradient(180deg, #0b9444, #0a6c34);
-            color: white;
-            padding: 20px;
-        }
-
-        .logo-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, .25);
-        }
-
-        .logo-box img {
-            width: 56px;
-            height: 56px;
-            object-fit: contain;
-        }
-
-        .logo-text h3 {
-            margin: 0;
-            font-size: 18px;
-        }
-
-        .logo-text p {
-            margin: 2px 0;
-            font-size: 12px;
-        }
-
-        .logo-text span {
-            font-size: 11px;
-            opacity: .85;
-        }
-
-        .menu a {
-            display: block;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-        }
-
-        .menu a.active,
-        .menu a:hover {
-            background: rgba(255, 255, 255, .2);
-        }
-
-        /* ===== CONTENT ===== */
-        .content {
-            flex: 1;
-            padding: 24px 30px;
-            background: white;
-        }
-
-        .badge.ditolak {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        /* ===== CARD ===== */
-        .card {
-            background: #fff;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
-        }
-
-        /* ===== INFO GRID ===== */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        .info-box {
-            background: #f9fafb;
-            padding: 16px;
-            border-radius: 10px;
-        }
-
-        .info-box label {
-            display: block;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 6px;
-        }
-
-        .info-box strong {
-            color: #111827;
-        }
-
-        /* ===== STATUS ===== */
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: bold;
-        }
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        background: #f4f6f8;
+    }
+
+    /* ===== LAYOUT ===== */
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+        width: 240px;
+        background: linear-gradient(180deg, #0b9444, #0a6c34);
+        color: white;
+        padding: 20px;
+    }
+
+    .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, .25);
+    }
+
+    .logo-box img {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+    }
+
+    .logo-text h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .logo-text p {
+        margin: 2px 0;
+        font-size: 12px;
+    }
+
+    .logo-text span {
+        font-size: 11px;
+        opacity: .85;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .menu a.active,
+    .menu a:hover {
+        background: rgba(255, 255, 255, .2);
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+        margin-left: 300px;
+        width: calc(100% - 300px);
+        padding: 30px;
+        background: #f4f6f8;
+    }
+
+    .badge.ditolak {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+    }
+
+    /* ===== INFO GRID ===== */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .info-box {
+        background: #f9fafb;
+        padding: 16px;
+        border-radius: 10px;
+    }
+
+    .info-box label {
+        display: block;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 6px;
+    }
+
+    .info-box strong {
+        color: #111827;
+    }
+
+    /* ===== STATUS ===== */
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: bold;
+    }
 
-        .dipinjam {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
+    .dipinjam {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
 
-        .dikembalikan {
-            background: #dcfce7;
-            color: #166534;
-        }
+    .dikembalikan {
+        background: #dcfce7;
+        color: #166534;
+    }
 
-        .terlambat {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+    .terlambat {
+        background: #fee2e2;
+        color: #991b1b;
+    }
 
-        .menunggu {
-            background: #fef3c7;
-            color: #92400e;
-        }
+    .menunggu {
+        background: #fef3c7;
+        color: #92400e;
+    }
 
-        /* ===== TABLE ===== */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 18px;
-        }
+    /* ===== TABLE ===== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+    }
 
-        thead {
-            background: #e9f7ef;
-        }
+    thead {
+        background: #e9f7ef;
+    }
 
-        th,
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
-            font-size: 14px;
-        }
+    th,
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+        font-size: 14px;
+    }
 
-        th {
-            color: #166534;
-        }
+    th {
+        color: #166534;
+    }
 
-        tbody tr:hover {
-            background: #f9fafb;
-        }
+    tbody tr:hover {
+        background: #f9fafb;
+    }
 
-        /* ===== BUTTON ===== */
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            background: #16a34a;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
+    /* ===== BUTTON ===== */
+    .back-btn {
+        display: inline-block;
+        margin-bottom: 20px;
+        text-decoration: none;
+        background: #16a34a;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
 
-        .denda {
-            color: #dc2626;
-            font-weight: bold;
-        }
+    .denda {
+        color: #dc2626;
+        font-weight: bold;
+    }
 
-        .modal {
+    .modal {
 
-            display: none;
+        display: none;
 
-            position: fixed;
+        position: fixed;
 
-            left: 0;
-            top: 0;
+        left: 0;
+        top: 0;
 
-            width: 100%;
-            height: 100%;
+        width: 100%;
+        height: 100%;
 
-            background: rgba(0, 0, 0, .4);
+        background: rgba(0, 0, 0, .4);
 
-            justify-content: center;
+        justify-content: center;
 
-            align-items: center;
+        align-items: center;
 
-            z-index: 9999;
+        z-index: 9999;
 
-        }
+    }
 
-        .modal-content {
+    .modal-content {
 
-            background: white;
+        background: white;
 
-            padding: 25px;
+        padding: 25px;
 
-            width: 400px;
+        width: 400px;
 
-            border-radius: 12px;
+        border-radius: 12px;
 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
 
-        }
+    }
 
-        .modal-content h3 {
+    .modal-content h3 {
 
-            margin-top: 0;
+        margin-top: 0;
 
-            margin-bottom: 20px;
+        margin-bottom: 20px;
 
-        }
+    }
 
-        .modal-content input {
+    .modal-content input {
 
-            width: 100%;
+        width: 100%;
 
-            padding: 12px;
+        padding: 12px;
 
-            margin-top: 10px;
+        margin-top: 10px;
 
-            margin-bottom: 20px;
+        margin-bottom: 20px;
 
-            border: 1px solid #ccc;
+        border: 1px solid #ccc;
 
-            border-radius: 8px;
+        border-radius: 8px;
 
-        }
+    }
 
-        .modal-button {
+    .modal-button {
 
-            display: flex;
+        display: flex;
 
-            justify-content: flex-end;
+        justify-content: flex-end;
 
-            gap: 10px;
+        gap: 10px;
 
-        }
+    }
 
-        .modal-button button {
+    .modal-button button {
 
-            padding: 10px 18px;
+        padding: 10px 18px;
 
-            border: none;
+        border: none;
 
-            border-radius: 8px;
+        border-radius: 8px;
 
-            cursor: pointer;
+        cursor: pointer;
 
-        }
+    }
 
-        .modal-button button:first-child {
+    .modal-button button:first-child {
 
-            background: #94a3b8;
+        background: #94a3b8;
 
-            color: white;
+        color: white;
 
-        }
+    }
 
-        .modal-button button:last-child {
+    .modal-button button:last-child {
 
-            background: #16a34a;
+        background: #16a34a;
 
-            color: white;
+        color: white;
 
-        }
+    }
 
-        .action-btn {
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            width: 120px;
-            cursor: pointer;
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .2s;
-        }
+    .action-btn {
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        width: 120px;
+        cursor: pointer;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .2s;
+    }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
-        }
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
 
-        .btn-kembalikan {
-            background: #16a34a;
-        }
+    .btn-kembalikan {
+        background: #16a34a;
+    }
 
-        .btn-kembalikan:hover {
-            background: #15803d;
-        }
+    .btn-kembalikan:hover {
+        background: #15803d;
+    }
 
-        .btn-rusak {
-            background: #f59e0b;
-        }
+    .btn-rusak {
+        background: #f59e0b;
+    }
 
-        .btn-rusak:hover {
-            background: #d97706;
-        }
+    .btn-rusak:hover {
+        background: #d97706;
+    }
 
-        .btn-hilang {
-            background: #dc2626;
-        }
+    .btn-hilang {
+        background: #dc2626;
+    }
 
-        .btn-hilang:hover {
-            background: #b91c1c;
-        }
+    .btn-hilang:hover {
+        background: #b91c1c;
+    }
+
+    .alert-success {
+        background: #DCFCE7;
+        color: #166534;
+        border: 1px solid #86EFAC;
+
+        padding: 14px 18px;
+
+        border-radius: 10px;
+
+        margin-bottom: 20px;
+
+        font-weight: 600;
+    }
+
+    .alert-error {
+        background: #FEE2E2;
+        color: #B91C1C;
+        border: 1px solid #FCA5A5;
+
+        padding: 14px 18px;
+
+        border-radius: 10px;
+
+        margin-bottom: 20px;
+
+        font-weight: 600;
+    }
     </style>
 </head>
 
@@ -338,54 +367,26 @@
     <div class="wrapper">
 
         <!-- SIDEBAR -->
-        <div class="sidebar">
-
-            <div class="logo-box">
-
-                <img src="{{ asset('images/logo.png') }}">
-
-                <div class="logo-text">
-
-                    <h3>SIMPER</h3>
-
-                    <p>Sistem Informasi Perpustakaan</p>
-
-                    <span>MTs Islamiyah Banat Senori</span>
-
-                </div>
-
-            </div>
-
-            <div class="menu">
-
-                <a href="/admin/dashboard">
-                    🏠 Dashboard
-                </a>
-
-                <a href="/admin/peminjaman" class="active">
-
-                    📦 Peminjaman
-
-                </a>
-
-                <a href="/admin/koleksi">
-                    📚 Koleksi
-                </a>
-
-                <a href="/admin/anggota">
-                    👥 Anggota
-                </a>
-
-            </div>
-
-        </div>
+        @include('components.admin-sidebar')
 
         <!-- CONTENT -->
         <div class="content">
 
             @include('partials.navbar-admin')
 
-            <a href="/admin/peminjaman" class="back-btn">
+            @if(session('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div class="alert-error">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            <a href="{{ request('redirect', route('admin.peminjaman')) }}" class="back-btn">
 
                 ⬅ Kembali
 
@@ -398,6 +399,9 @@
                 </h2>
 
                 <!-- INFO -->
+                @php
+                $totalDenda = $peminjaman->detail->sum('jumlah_denda');
+                @endphp
                 <div class="info-grid">
 
                     <div class="info-box">
@@ -445,16 +449,16 @@
                         <label>Status Peminjaman</label>
 
                         @php
-                            $statusClass = match ($peminjaman->status_peminjaman) {
+                        $statusClass = match ($peminjaman->status_peminjaman) {
 
-                                'proses' => 'menunggu',
-                                'dipinjam' => 'dipinjam',
-                                'terlambat' => 'terlambat',
-                                'selesai' => 'dikembalikan',
-                                'ditolak' => 'ditolak',
+                        'proses' => 'menunggu',
+                        'dipinjam' => 'dipinjam',
+                        'terlambat' => 'terlambat',
+                        'selesai' => 'dikembalikan',
+                        'ditolak' => 'ditolak',
 
-                                default => 'menunggu'
-                            };
+                        default => 'menunggu'
+                        };
                         @endphp
 
                         <span class="badge {{ $statusClass }}">
@@ -465,53 +469,61 @@
 
                     </div>
 
+                    <div class="info-box">
+                        <label>Total Denda</label>
+
+                        <strong class="denda">
+                            Rp {{ number_format($totalDenda, 0, ',', '.') }}
+                        </strong>
+                    </div>
+
                 </div>
 
                 {{-- ACTION BUTTON --}}
 
                 @if($peminjaman->status_peminjaman == 'menunggu')
 
-                    <form action="/admin/peminjaman/{{ $peminjaman->id_peminjaman }}/approve" method="POST">
+                <form action="/admin/peminjaman/{{ $peminjaman->id_peminjaman }}/approve" method="POST">
 
-                        @csrf
-                        @method('PUT')
+                    @csrf
+                    @method('PUT')
 
-                        <button type="submit" onclick="return confirm('Setujui peminjaman ini?')"
-                            style="
-                                                                                                                                                        background:#16a34a;
-                                                                                                                                                        color:white;
-                                                                                                                                                        border:none;
-                                                                                                                                                        padding:12px 20px;
-                                                                                                                                                        border-radius:8px;
-                                                                                                                                                        cursor:pointer;
-                                                                                                                                                        font-weight:bold;
-                                                                                                                                                    ">
-                            ✅ Setujui Peminjaman
-                        </button>
+                    <button type="submit" onclick="return confirm('Setujui peminjaman ini?')"
+                        style="
+                                                                                                                                                                                                                        background:#16a34a;
+                                                                                                                                                                                                                        color:white;
+                                                                                                                                                                                                                        border:none;
+                                                                                                                                                                                                                        padding:12px 20px;
+                                                                                                                                                                                                                        border-radius:8px;
+                                                                                                                                                                                                                        cursor:pointer;
+                                                                                                                                                                                                                        font-weight:bold;
+                                                                                                                                                                                                                    ">
+                        ✅ Setujui Peminjaman
+                    </button>
 
-                    </form>
+                </form>
 
                 @endif
 
 
                 @if(
-                        $peminjaman->status_peminjaman == 'dipinjam'
-                        || $peminjaman->status_peminjaman == 'terlambat'
-                    )
+                $peminjaman->status_peminjaman == 'dipinjam'
+                || $peminjaman->status_peminjaman == 'terlambat'
+                )
 
-                    <form action="/admin/peminjaman/{{ $peminjaman->id_peminjaman }}/kembalikan" method="POST">
+                <form action="/admin/peminjaman/{{ $peminjaman->id_peminjaman }}/kembalikan" method="POST">
 
-                        @csrf
-                        @method('PUT')
+                    @csrf
+                    @method('PUT')
 
-                        <button type="submit" class="action-btn btn-kembalikan"
-                            onclick="return confirm('Tandai buku ini sebagai dikembalikan?')">
+                    <button type="submit" class="action-btn btn-kembalikan"
+                        onclick="return confirm('Tandai buku ini sebagai dikembalikan?')">
 
-                            ✅ Kembalikan
+                        ✅ Kembalikan
 
-                        </button>
+                    </button>
 
-                    </form>
+                </form>
 
                 @endif
 
@@ -552,162 +564,162 @@
 
                     @forelse($peminjaman->detail as $i => $detail)
 
-                        <tr>
+                    <tr>
 
-                            <td>
-                                {{ $i + 1 }}
-                            </td>
+                        <td>
+                            {{ $i + 1 }}
+                        </td>
 
-                            <td>
+                        <td>
 
-                                @if($detail->koleksi->gambar)
+                            @if($detail->koleksi->gambar)
 
-                                    <img src="{{ asset('uploads/koleksi/' . $detail->koleksi->gambar) }}"
+                            <img src="{{ asset('uploads/koleksi/' . $detail->koleksi->gambar) }}"
+                                style="
+                                                                                                                                                                                                                                                                                                                                                                                                    width:70px;
+                                                                                                                                                                                                                                                                                                                                                                                                    height:90px;
+                                                                                                                                                                                                                                                                                                                                                                                                    object-fit:cover;
+                                                                                                                                                                                                                                                                                                                                                                                                    border-radius:8px;
+                                                                                                                                                                                                                                                                                                                                                                                                ">
+
+                            @else
+
+                            <img src="{{ asset('images/no-cover.png') }}"
+                                style="
+                                                                                                                                                                                                                                                                                                                                                                                                    width:70px;
+                                                                                                                                                                                                                                                                                                                                                                                                    height:90px;
+                                                                                                                                                                                                                                                                                                                                                                                                    object-fit:cover;
+                                                                                                                                                                                                                                                                                                                                                                                                    border-radius:8px;
+                                                                                                                                                                                                                                                                                                                                                                                                ">
+
+                            @endif
+
+                        </td>
+
+                        <td>
+                            {{ $detail->koleksi->judul_koleksi }}
+                        </td>
+
+                        <td>
+                            {{ $detail->koleksi->penulis }}
+                        </td>
+
+                        <td>
+                            {{ $detail->jumlah }}
+                        </td>
+
+                        <td>
+
+                            <span class="badge {{ $detail->status_item }}">
+
+                                {{ ucfirst($detail->status_item) }}
+
+                            </span>
+
+                        </td>
+
+                        <td class="denda">
+
+                            Rp {{ number_format($detail->jumlah_denda) }}
+
+                        </td>
+
+                        <td>
+
+                            @if($detail->status_item == 'dipinjam')
+
+                            <div
+                                style="
+                                                                                                                                                                                                                                                                                                                                                display:flex;
+                                                                                                                                                                                                                                                                                                                                                flex-direction:column;
+                                                                                                                                                                                                                                                                                                                                                gap:8px;
+                                                                                                                                                                                                                                                                                                                                            ">
+
+                                {{-- KEMBALIKAN --}}
+                                <form action="{{ route('admin.detail.kembalikan', $detail->id_detailp) }}"
+                                    method="POST">
+
+                                    @csrf
+                                    @method('PUT')
+
+                                    <button type="submit"
+                                        onclick="return confirm('Tandai buku ini sebagai dikembalikan?')"
                                         style="
-                                                                                                                                                                                                                                                                    width:70px;
-                                                                                                                                                                                                                                                                    height:90px;
-                                                                                                                                                                                                                                                                    object-fit:cover;
-                                                                                                                                                                                                                                                                    border-radius:8px;
-                                                                                                                                                                                                                                                                ">
+                                                                                                                                                                                                                                                                                                                                                            background:#16a34a;
+                                                                                                                                                                                                                                                                                                                                                            color:white;
+                                                                                                                                                                                                                                                                                                                                                            border:none;
+                                                                                                                                                                                                                                                                                                                                                            padding:8px 12px;
+                                                                                                                                                                                                                                                                                                                                                            border-radius:6px;
+                                                                                                                                                                                                                                                                                                                                                            cursor:pointer;
+                                                                                                                                                                                                                                                                                                                                                            font-size:13px;
+                                                                                                                                                                                                                                                                                                                                                            width:120px;
+                                                                                                                                                                                                                                                                                                                                                        ">
 
-                                @else
+                                        ✅ Kembalikan
 
-                                    <img src="{{ asset('images/no-cover.png') }}"
-                                        style="
-                                                                                                                                                                                                                                                                    width:70px;
-                                                                                                                                                                                                                                                                    height:90px;
-                                                                                                                                                                                                                                                                    object-fit:cover;
-                                                                                                                                                                                                                                                                    border-radius:8px;
-                                                                                                                                                                                                                                                                ">
+                                    </button>
 
-                                @endif
+                                </form>
 
-                            </td>
+                                {{-- RUSAK --}}
+                                <form action="{{ route('admin.detail.rusak', $detail->id_detailp) }}" method="POST">
 
-                            <td>
-                                {{ $detail->koleksi->judul_koleksi }}
-                            </td>
+                                    @csrf
+                                    @method('PUT')
 
-                            <td>
-                                {{ $detail->koleksi->penulis }}
-                            </td>
+                                    <button type="button" class="action-btn btn-rusak"
+                                        onclick="openRusakModal({{ $detail->id_detailp }})">
 
-                            <td>
-                                {{ $detail->jumlah }}
-                            </td>
+                                        ⚠️ Rusak
 
-                            <td>
+                                    </button>
 
-                                <span class="badge {{ $detail->status_item }}">
+                                </form>
 
-                                    {{ ucfirst($detail->status_item) }}
+                                {{-- HILANG --}}
+                                <form action="{{ route('admin.detail.hilang', $detail->id_detailp) }}" method="POST">
 
-                                </span>
+                                    @csrf
+                                    @method('PUT')
 
-                            </td>
+                                    <button type="button" class="action-btn btn-hilang"
+                                        onclick="openHilangModal({{ $detail->id_detailp }})">
 
-                            <td class="denda">
+                                        ❌ Hilang
 
-                                Rp {{ number_format($detail->jumlah_denda) }}
+                                    </button>
 
-                            </td>
+                                </form>
 
-                            <td>
+                            </div>
 
-                                @if($detail->status_item == 'dipinjam')
+                            @else
 
-                                    <div
-                                        style="
-                                                                                                                                                                                                                display:flex;
-                                                                                                                                                                                                                flex-direction:column;
-                                                                                                                                                                                                                gap:8px;
-                                                                                                                                                                                                            ">
+                            <span
+                                style="
+                                                                                                                                                                                                                                                                                                                                                color:#64748b;
+                                                                                                                                                                                                                                                                                                                                                font-size:13px;
+                                                                                                                                                                                                                                                                                                                                            ">
+                                Tidak ada aksi
+                            </span>
 
-                                        {{-- KEMBALIKAN --}}
-                                        <form action="{{ route('admin.detail.kembalikan', $detail->id_detailp) }}"
-                                            method="POST">
+                            @endif
 
-                                            @csrf
-                                            @method('PUT')
+                        </td>
 
-                                            <button type="submit"
-                                                onclick="return confirm('Tandai buku ini sebagai dikembalikan?')"
-                                                style="
-                                                                                                                                                                                                                            background:#16a34a;
-                                                                                                                                                                                                                            color:white;
-                                                                                                                                                                                                                            border:none;
-                                                                                                                                                                                                                            padding:8px 12px;
-                                                                                                                                                                                                                            border-radius:6px;
-                                                                                                                                                                                                                            cursor:pointer;
-                                                                                                                                                                                                                            font-size:13px;
-                                                                                                                                                                                                                            width:120px;
-                                                                                                                                                                                                                        ">
-
-                                                ✅ Kembalikan
-
-                                            </button>
-
-                                        </form>
-
-                                        {{-- RUSAK --}}
-                                        <form action="{{ route('admin.detail.rusak', $detail->id_detailp) }}" method="POST">
-
-                                            @csrf
-                                            @method('PUT')
-
-                                            <button type="button" class="action-btn btn-rusak"
-                                                onclick="openRusakModal({{ $detail->id_detailp }})">
-
-                                                ⚠️ Rusak
-
-                                            </button>
-
-                                        </form>
-
-                                        {{-- HILANG --}}
-                                        <form action="{{ route('admin.detail.hilang', $detail->id_detailp) }}" method="POST">
-
-                                            @csrf
-                                            @method('PUT')
-
-                                            <button type="button" class="action-btn btn-hilang"
-                                                onclick="openHilangModal({{ $detail->id_detailp }})">
-
-                                                ❌ Hilang
-
-                                            </button>
-
-                                        </form>
-
-                                    </div>
-
-                                @else
-
-                                    <span
-                                        style="
-                                                                                                                                                                                                                color:#64748b;
-                                                                                                                                                                                                                font-size:13px;
-                                                                                                                                                                                                            ">
-                                        Tidak ada aksi
-                                    </span>
-
-                                @endif
-
-                            </td>
-
-                        </tr>
+                    </tr>
 
                     @empty
 
-                        <tr>
+                    <tr>
 
-                            <td colspan="8" style="text-align:center;">
+                        <td colspan="8" style="text-align:center;">
 
-                                Tidak ada detail peminjaman
+                            Tidak ada detail peminjaman
 
-                            </td>
+                        </td>
 
-                        </tr>
+                    </tr>
 
                     @endforelse
 
@@ -736,7 +748,15 @@
 
                 <label>Jumlah Denda</label>
 
-                <input type="number" name="jumlah_denda" min="0" required>
+                <input type="number" id="jumlah_denda" name="jumlah_denda" min="0">
+                <small id="error_denda" style="
+        color:#dc2626;
+        display:none;
+        font-size:13px;
+        margin-top:-12px;
+        margin-bottom:15px;
+    ">
+                </small>
 
                 <div class="modal-button">
 
@@ -761,33 +781,71 @@
     </div>
 
     <script>
-        function openRusakModal(id) {
+    function openRusakModal(id) {
 
-            document.getElementById("judulModal").innerHTML = "Input Denda Buku Rusak";
+        document.getElementById("judulModal").innerHTML = "Input Denda Buku Rusak";
 
-            document.getElementById("formDenda").action =
-                "/admin/detail-peminjaman/" + id + "/rusak";
+        document.getElementById("formDenda").action =
+            "/admin/detail-peminjaman/" + id + "/rusak";
 
-            document.getElementById("modalDenda").style.display = "flex";
+        document.getElementById("modalDenda").style.display = "flex";
 
+        // document.getElementById("jumlah_denda").value = "";
+        // document.getElementById("error_denda").style.display = "none";
+        // document.getElementById("error_denda").innerHTML = "";
+
+    }
+
+    function openHilangModal(id) {
+
+        document.getElementById("judulModal").innerHTML = "Input Denda Buku Hilang";
+
+        document.getElementById("formDenda").action =
+            "/admin/detail-peminjaman/" + id + "/hilang";
+
+        document.getElementById("modalDenda").style.display = "flex";
+
+    }
+
+    function closeModal() {
+
+        document.getElementById("modalDenda").style.display = "none";
+
+    }
+
+    document.getElementById("formDenda").addEventListener("submit", function(e) {
+
+        const input = document.getElementById("jumlah_denda");
+        const error = document.getElementById("error_denda");
+
+        error.innerHTML = "";
+        error.style.display = "none";
+
+        if (input.value.trim() === "") {
+
+            e.preventDefault();
+
+            error.innerHTML = "Jumlah denda tidak boleh kosong";
+            error.style.display = "block";
+
+            input.focus();
+
+            return;
         }
 
-        function openHilangModal(id) {
+        if (parseInt(input.value) < 0) {
 
-            document.getElementById("judulModal").innerHTML = "Input Denda Buku Hilang";
+            e.preventDefault();
 
-            document.getElementById("formDenda").action =
-                "/admin/detail-peminjaman/" + id + "/hilang";
+            error.innerHTML = "Jumlah denda tidak boleh kurang dari 0";
+            error.style.display = "block";
 
-            document.getElementById("modalDenda").style.display = "flex";
+            input.focus();
 
+            return;
         }
 
-        function closeModal() {
-
-            document.getElementById("modalDenda").style.display = "none";
-
-        }
+    });
     </script>
 
 </body>

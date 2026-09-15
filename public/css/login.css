@@ -94,12 +94,41 @@ body {
 }
 
 .alert-error {
-    background-color: #fdecea;
-    color: #b71c1c;
-    padding: 12px;
-    border-radius: 8px;
+    background: #fff5f5;
+    border: 1px solid #f5c2c7;
+    color: #dc3545;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
     margin-bottom: 16px;
+}
+
+/* Error pada field */
+.text-error {
+    display: block;
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: -12px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.input-error {
+    border: 1px solid #dc3545 !important;
+}
+
+/* Link kembali */
+.btn-back {
+    display: block;
+    margin-top: 16px;
     text-align: center;
+    color: #666;
     font-size: 14px;
-    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    color: #0a8f3c;
+    text-decoration: underline;
 }

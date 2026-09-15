@@ -18,9 +18,12 @@ class PeminjamanAdminController extends Controller
     */
     public function index()
     {
+
+        $this->updateStatusExpired();
         $this->updateStatusTerlambat();
 
         $search = request('search');
+        $status = request('status');
 
         $peminjamans = Peminjaman::with([
             'anggota',
@@ -29,27 +32,87 @@ class PeminjamanAdminController extends Controller
 
             ->when($search, function ($query) use ($search) {
 
-                $query->whereHas('anggota', function ($q) use ($search) {
+                $query->where(function ($q) use ($search) {
 
-                    $q->where('nama_lengkap', 'like', "%{$search}%")
-                        ->orWhere('nis', 'like', "%{$search}%");
-                })
+                    $q->whereHas('anggota', function ($anggota) use ($search) {
 
-                    ->orWhere('status_peminjaman', 'like', "%{$search}%")
+                        $anggota->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nis', 'like', "%{$search}%");
 
-                    ->orWhereHas('detail.koleksi', function ($q) use ($search) {
+                    })
 
-                        $q->where('judul_koleksi', 'like', "%{$search}%");
+                        ->orWhereHas('detail.koleksi', function ($koleksi) use ($search) {
+
+                            $koleksi->where('judul_koleksi', 'like', "%{$search}%");
+
+                        })
+
+                        ->orWhere('status_peminjaman', 'like', "%{$search}%");
+
+                });
+
+            })
+
+            ->when($status, function ($query) use ($status) {
+
+                if ($status == 'terlambat') {
+
+                    $query->where('status_peminjaman', 'dipinjam')
+                        ->whereHas('detail', function ($q) {
+                            $q->where('status_item', 'terlambat');
+                        });
+
+                } elseif ($status == 'rusak') {
+
+                    $query->whereHas('detail', function ($q) {
+                        $q->where('status_item', 'rusak');
                     });
+
+                } elseif ($status == 'hilang') {
+
+                    $query->whereHas('detail', function ($q) {
+                        $q->where('status_item', 'hilang');
+                    });
+
+                } else {
+
+                    $query->where('status_peminjaman', $status);
+
+                }
+
             })
 
             ->orderBy('id_peminjaman', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view(
             'admin.Peminjaman.index',
             compact('peminjamans')
         );
+    }
+
+    private function updateStatusExpired()
+    {
+        $expired = Peminjaman::with('detail')
+            ->where('status_peminjaman', 'proses')
+            ->where('created_at', '<=', now()->subDays(2))
+            ->get();
+
+        foreach ($expired as $peminjaman) {
+
+            foreach ($peminjaman->detail as $detail) {
+
+                $detail->update([
+                    'status_item' => 'ditolak'
+                ]);
+
+            }
+
+            $peminjaman->update([
+                'status_peminjaman' => 'ditolak'
+            ]);
+        }
     }
 
     private function updateStatusTerlambat()
@@ -102,6 +165,7 @@ class PeminjamanAdminController extends Controller
     */
     public function detail($id)
     {
+        $this->updateStatusExpired();
         $this->updateStatusTerlambat();
 
         $peminjaman = Peminjaman::with([
@@ -292,21 +356,6 @@ class PeminjamanAdminController extends Controller
                     'stok' => $koleksi->stok + $detail->jumlah
                 ]);
 
-                /*
-                |---------------------------------------------------
-                | UPDATE STATUS ITEM
-                |---------------------------------------------------
-                | Hanya item yang masih dipinjam
-                | yang diubah menjadi dikembalikan.
-                |
-                | Jika status:
-                | - terlambat
-                | - rusak
-                | - hilang
-                |
-                | maka jangan diubah.
-                |---------------------------------------------------
-                */
                 if ($detail->status_item == 'dipinjam') {
 
                     $detail->update([
@@ -445,7 +494,8 @@ class PeminjamanAdminController extends Controller
 
         return back()->with(
             'success',
-            'Buku berhasil ditandai rusak.'
+            'Buku berhasil ditandai rusak. Denda: Rp ' .
+            number_format($request->jumlah_denda, 0, ',', '.')
         );
     }
 
@@ -481,7 +531,8 @@ class PeminjamanAdminController extends Controller
 
         return back()->with(
             'success',
-            'Buku berhasil ditandai hilang.'
+            'Buku berhasil ditandai hilang. Denda: Rp ' .
+            number_format($request->jumlah_denda, 0, ',', '.')
         );
     }
 
@@ -522,16 +573,16 @@ class PeminjamanAdminController extends Controller
     {
         $anggota = null;
 
-        if ($request->filled('keyword')) {
+        if ($request->filled('anggota')) {
 
             $anggota = AnggotaPerpustakaan::where(
                 'nis',
-                $request->keyword
+                $request->anggota
             )
                 ->orWhere(
                     'nama_lengkap',
                     'like',
-                    '%' . $request->keyword . '%'
+                    '%' . $request->anggota . '%'
                 )
                 ->first();
         }
@@ -553,14 +604,31 @@ class PeminjamanAdminController extends Controller
 
     public function storeAdmin(Request $request)
     {
-        $request->validate([
+        $request->validate(
 
-            'id_anggota' =>
-                'required',
+            [
 
-            'koleksi' =>
-                'required|array|min:1|max:3'
-        ]);
+                'id_anggota' => 'required',
+
+                'koleksi' => 'required|array|min:1|max:3'
+
+            ],
+
+            [
+
+                'id_anggota.required' => 'Silakan pilih anggota terlebih dahulu.',
+
+                'koleksi.required' => 'Silakan pilih minimal 1 koleksi.',
+
+                'koleksi.array' => 'Data koleksi tidak valid.',
+
+                'koleksi.min' => 'Silakan pilih minimal 1 koleksi.',
+
+                'koleksi.max' => 'Maksimal hanya boleh meminjam 3 koleksi.'
+
+            ]
+
+        );
 
         DB::beginTransaction();
 
@@ -608,7 +676,7 @@ class PeminjamanAdminController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('admin.peminjaman.index')
+                ->route('admin.peminjaman')
                 ->with(
                     'success',
                     'Peminjaman berhasil dibuat'
@@ -635,19 +703,26 @@ class PeminjamanAdminController extends Controller
 
     public function cariAnggota(Request $request)
     {
+        $request->validate([
+            'anggota' => 'required|string|max:100'
+        ], [
+            'anggota.required' => 'Silakan masukkan NIS atau nama anggota.',
+            'anggota.max' => 'Pencarian terlalu panjang.'
+        ]);
+
         $anggota = null;
         $jumlahDipinjam = 0;
 
-        if ($request->keyword) {
+        if ($request->anggota) {
 
             $anggota = AnggotaPerpustakaan::where(
                 'nis',
-                $request->keyword
+                $request->anggota
             )
                 ->orWhere(
                     'nama_lengkap',
                     'like',
-                    '%' . $request->keyword . '%'
+                    '%' . $request->anggota . '%'
                 )
                 ->first();
 
@@ -675,17 +750,47 @@ class PeminjamanAdminController extends Controller
             }
         }
 
+        if (!$anggota) {
+
+            $anggota = null;
+            $jumlahDipinjam = 0;
+            $koleksis = collect();
+
+            $keywordAnggota = $request->anggota;
+
+            return view(
+                'admin.Peminjaman.create',
+                compact(
+                    'anggota',
+                    'jumlahDipinjam',
+                    'koleksis'
+                )
+            )->withErrors([
+                        'anggota' => 'Anggota tidak ditemukan'
+                    ]);
+
+        }
+
+        $keywordAnggota = $request->anggota;
+
         return view(
             'admin.Peminjaman.create',
             compact(
                 'anggota',
-                'jumlahDipinjam'
+                'jumlahDipinjam',
+                'keywordAnggota'
             )
         );
     }
 
     public function cariKoleksi(Request $request)
     {
+        $request->validate([
+            'koleksi' => 'required|string|max:255'
+        ], [
+            'koleksi.required' => 'Silakan masukkan judul koleksi.'
+        ]);
+
         $anggota = AnggotaPerpustakaan::find(
             $request->id_anggota
         );
@@ -718,10 +823,27 @@ class PeminjamanAdminController extends Controller
         $koleksis = Koleksi::where(
             'judul_koleksi',
             'like',
-            '%' . $request->judul . '%'
+            '%' . $request->koleksi . '%'
         )
             ->where('stok', '>', 0)
             ->get();
+
+        if ($koleksis->isEmpty()) {
+
+            $koleksis = collect();
+
+            return view(
+                'admin.Peminjaman.create',
+                compact(
+                    'anggota',
+                    'koleksis',
+                    'jumlahDipinjam'
+                )
+            )->withErrors([
+                        'koleksi' => 'Koleksi tidak ditemukan'
+                    ]);
+
+        }
 
         return view(
             'admin.Peminjaman.create',

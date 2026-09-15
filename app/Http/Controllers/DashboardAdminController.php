@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Koleksi;
 use App\Models\AnggotaPerpustakaan;
 use App\Models\Peminjaman;
+use App\Models\DetailPeminjaman;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -30,8 +31,12 @@ class DashboardAdminController extends Controller
 
         $totalTerlambat = Peminjaman::where(
             'status_peminjaman',
-            'terlambat'
-        )->count();
+            'dipinjam'
+        )
+            ->whereHas('detail', function ($q) {
+                $q->where('status_item', 'terlambat');
+            })
+            ->count();
 
         /*
         |--------------------------------------------------------------------------
@@ -86,11 +91,14 @@ class DashboardAdminController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $kategoriChart = Koleksi::select(
-            'jenis_koleksi',
-            DB::raw('COUNT(*) as total')
-        )
-            ->groupBy('jenis_koleksi')
+        $kategoriChart = DB::table('koleksis')
+            ->join('kategori_koleksi', 'koleksis.id_kategori', '=', 'kategori_koleksi.id_kategori')
+            ->join('jenis_koleksi', 'kategori_koleksi.id_jenis', '=', 'jenis_koleksi.id_jenis')
+            ->select(
+                'jenis_koleksi.nama_jenis',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('jenis_koleksi.nama_jenis')
             ->get();
 
         /*

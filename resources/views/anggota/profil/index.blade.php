@@ -85,7 +85,7 @@
 
         </div>
 
-        <div class="card">
+        <div class="card" id="ubah-password">
 
             <h2>
 
@@ -117,31 +117,30 @@
 
                 @csrf
 
-                <label>
+                <label>Password Lama</label>
 
-                    Password Lama
+                <input type="password" name="password_lama" placeholder="Masukkan password lama"
+                    autocomplete="current-password" class="@error('password_lama') input-error @enderror">
 
-                </label>
+                @error('password_lama')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
-                <input type="password" name="password_lama">
+                <label>Password Baru</label>
 
-                <label>
+                <input type="password" name="password_baru" placeholder="Masukkan password baru"
+                    autocomplete="new-password" class="@error('password_baru') input-error @enderror">
 
-                    Password Baru
+                @error('password_baru')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
-                </label>
+                <label>Konfirmasi Password Baru</label>
 
-                <input type="password" name="password_baru">
+                <input type="password" name="password_baru_confirmation" placeholder="Konfirmasi password baru"
+                    autocomplete="new-password" class="@error('password_baru') input-error @enderror">
 
-                <label>
-
-                    Konfirmasi Password Baru
-
-                </label>
-
-                <input type="password" name="password_baru_confirmation">
-
-                <button>
+                <button type="submit">
 
                     Simpan Kata Sandi Baru
 

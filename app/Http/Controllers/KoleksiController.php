@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Koleksi;
 use App\Models\StockOpname;
+use App\Models\DetailPeminjaman;
+use App\Models\JenisKoleksi;
+use App\Models\KategoriKoleksi;
 
 class KoleksiController extends Controller
 {
@@ -19,39 +22,45 @@ class KoleksiController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
+        $idJenis = $request->id_jenis;
+        $idKategori = $request->id_kategori;
 
-        $koleksis = Koleksi::when(
-            $search,
-            function ($query, $search) {
+        $koleksis = Koleksi::with('kategori.jenis')
 
-                $query->where(
-                    'isbn',
-                    'like',
-                    "%{$search}%"
-                )
-                    ->orWhere(
-                        'judul_koleksi',
-                        'like',
-                        "%{$search}%"
-                    )
-                    ->orWhere(
-                        'penulis',
-                        'like',
-                        "%{$search}%"
-                    )
-                    ->orWhere(
-                        'penerbit',
-                        'like',
-                        "%{$search}%"
-                    );
-            }
-        )
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('kode_koleksi', 'like', "%{$search}%")
+                        ->orWhere('isbn', 'like', "%{$search}%")
+                        ->orWhere('judul_koleksi', 'like', "%{$search}%")
+                        ->orWhere('penulis', 'like', "%{$search}%")
+                        ->orWhere('penerbit', 'like', "%{$search}%");
+                });
+            })
+
+            ->when($idJenis, function ($query) use ($idJenis) {
+                $query->whereHas('kategori', function ($q) use ($idJenis) {
+                    $q->where('id_jenis', $idJenis);
+                });
+            })
+
+            ->when($idKategori, function ($query) use ($idKategori) {
+                $query->where('id_kategori', $idKategori);
+            })
+
             ->orderBy('id_koleksi', 'desc')
             ->paginate(10);
 
+        $jenis = JenisKoleksi::orderBy('nama_jenis')->get();
+
+        $kategori = KategoriKoleksi::orderBy('nama_kategori')->get();
+
         return view(
             'admin.koleksi.index',
-            compact('koleksis')
+            compact(
+                'koleksis',
+                'jenis',
+                'kategori'
+            )
         );
     }
 
@@ -63,7 +72,14 @@ class KoleksiController extends Controller
 
     public function create()
     {
-        return view('admin.koleksi.create');
+        $jenis = JenisKoleksi::orderBy('nama_jenis')->get();
+
+        $kategori = KategoriKoleksi::orderBy('nama_kategori')->get();
+
+        return view(
+            'admin.koleksi.create',
+            compact('jenis', 'kategori')
+        );
     }
 
     /*
@@ -75,36 +91,46 @@ class KoleksiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'kode_koleksi' => 'required|unique:koleksis,kode_koleksi|max:20',
+            'isbn' => 'nullable|unique:koleksis,isbn',
+            'judul_koleksi' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'penerbit' => 'required|string|max:255',
+            'tahun_terbit' => 'required|digits:4',
+            'stok' => 'required|integer|min:0',
+            'denda_harian' => 'required|integer|min:0',
+            'id_kategori' => 'required|exists:kategori_koleksi,id_kategori',
+            'deskripsi' => 'required|string',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'kode_koleksi.required' => 'Kode koleksi wajib diisi.',
 
-            'isbn' =>
-                'required|unique:koleksis,isbn',
+            'kode_koleksi.unique' => 'Kode koleksi sudah digunakan.',
 
-            'judul_koleksi' =>
-                'required|string|max:255',
+            'kode_koleksi.max' => 'Kode koleksi maksimal 20 karakter.',
+            'isbn.unique' => 'ISBN sudah digunakan.',
 
-            'penulis' =>
-                'required|string|max:255',
+            'judul_koleksi.required' => 'Judul koleksi wajib diisi.',
+            'penulis.required' => 'Penulis wajib diisi.',
+            'penerbit.required' => 'Penerbit wajib diisi.',
+            'tahun_terbit.required' => 'Tahun terbit wajib diisi.',
+            'tahun_terbit.digits' => 'Tahun terbit harus terdiri dari 4 digit.',
 
-            'penerbit' =>
-                'required|string|max:255',
+            'stok.required' => 'Stok wajib diisi.',
+            'stok.integer' => 'Stok harus berupa angka.',
 
-            'tahun_terbit' =>
-                'required|digits:4',
+            'denda_harian.required' => 'Denda harian wajib diisi.',
+            'denda_harian.integer' => 'Denda harian harus berupa angka.',
 
-            'stok' =>
-                'required|integer|min:0',
+            'id_kategori.required' => 'Kategori koleksi wajib dipilih.',
+            'id_kategori.exists' => 'Kategori koleksi tidak ditemukan.',
 
-            'denda_harian' =>
-                'required|integer|min:0',
+            'deskripsi.required' => 'Deskripsi koleksi wajib diisi.',
 
-            'jenis_koleksi' =>
-                'required|string|max:100',
-
-            'deskripsi' =>
-                'nullable|string',
-
-            'gambar' =>
-                'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar.required' => 'Cover koleksi wajib diunggah.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Cover harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         $namaFile = null;
@@ -130,35 +156,28 @@ class KoleksiController extends Controller
 
         Koleksi::create([
 
-            'isbn' =>
-                $request->isbn,
+            'kode_koleksi' => $request->kode_koleksi,
 
-            'judul_koleksi' =>
-                $request->judul_koleksi,
+            'isbn' => $request->isbn,
 
-            'penulis' =>
-                $request->penulis,
+            'judul_koleksi' => $request->judul_koleksi,
 
-            'penerbit' =>
-                $request->penerbit,
+            'penulis' => $request->penulis,
 
-            'tahun_terbit' =>
-                $request->tahun_terbit,
+            'penerbit' => $request->penerbit,
 
-            'stok' =>
-                $request->stok,
+            'tahun_terbit' => $request->tahun_terbit,
 
-            'denda_harian' =>
-                $request->denda_harian,
+            'stok' => $request->stok,
 
-            'jenis_koleksi' =>
-                $request->jenis_koleksi,
+            'denda_harian' => $request->denda_harian,
 
-            'deskripsi' =>
-                $request->deskripsi,
+            'id_kategori' => $request->id_kategori,
 
-            'gambar' =>
-                $namaFile,
+            'deskripsi' => $request->deskripsi,
+
+            'gambar' => $namaFile
+
         ]);
 
         return redirect('/admin/koleksi')
@@ -176,13 +195,25 @@ class KoleksiController extends Controller
 
     public function edit($id_koleksi)
     {
-        $koleksi = Koleksi::findOrFail(
-            $id_koleksi
-        );
+        $koleksi = Koleksi::findOrFail($id_koleksi);
+
+        $jenis = JenisKoleksi::orderBy('nama_jenis')->get();
+
+        $kategori = KategoriKoleksi::orderBy('nama_kategori')->get();
+
+        $idJenisTerpilih = KategoriKoleksi::where(
+            'id_kategori',
+            $koleksi->id_kategori
+        )->value('id_jenis');
 
         return view(
             'admin.koleksi.edit',
-            compact('koleksi')
+            compact(
+                'koleksi',
+                'jenis',
+                'kategori',
+                'idJenisTerpilih'
+            )
         );
     }
 
@@ -198,38 +229,58 @@ class KoleksiController extends Controller
     ) {
 
         $request->validate([
-
-            'isbn' =>
-                'required|unique:koleksis,isbn,' .
+            'kode_koleksi' =>
+                'required|unique:koleksis,kode_koleksi,' .
                 $id_koleksi .
                 ',id_koleksi',
+            'isbn' => 'nullable|unique:koleksis,isbn,' . $id_koleksi . ',id_koleksi',
+            'judul_koleksi' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'penerbit' => 'required|string|max:255',
+            'tahun_terbit' => 'required|digits:4',
+            'stok' => 'required|integer|min:0',
+            'denda_harian' => 'required|integer|min:0',
+            'id_kategori' => 'required|exists:kategori_koleksi,id_kategori',
+            'deskripsi' => 'required|string',
 
-            'judul_koleksi' =>
-                'required|string|max:255',
+            // gambar tidak wajib saat edit
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
-            'penulis' =>
-                'required|string|max:255',
+        ], [
+            'kode_koleksi.required' => 'Kode koleksi wajib diisi.',
 
-            'penerbit' =>
-                'required|string|max:255',
+            'kode_koleksi.unique' => 'Kode koleksi sudah digunakan.',
 
-            'tahun_terbit' =>
-                'required|digits:4',
+            'kode_koleksi.max' => 'Kode koleksi maksimal 20 karakter.',
 
-            'stok' =>
-                'required|integer|min:0',
+            'isbn.unique' => 'ISBN sudah digunakan.',
 
-            'denda_harian' =>
-                'required|integer|min:0',
+            'judul_koleksi.required' => 'Judul koleksi wajib diisi.',
 
-            'jenis_koleksi' =>
-                'required|string|max:100',
+            'penulis.required' => 'Penulis wajib diisi.',
 
-            'deskripsi' =>
-                'nullable|string',
+            'penerbit.required' => 'Penerbit wajib diisi.',
 
-            'gambar' =>
-                'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'tahun_terbit.required' => 'Tahun terbit wajib diisi.',
+            'tahun_terbit.digits' => 'Tahun terbit harus terdiri dari 4 digit.',
+
+            'stok.required' => 'Stok wajib diisi.',
+            'stok.integer' => 'Stok harus berupa angka.',
+            'stok.min' => 'Stok minimal 0.',
+
+            'denda_harian.required' => 'Denda harian wajib diisi.',
+            'denda_harian.integer' => 'Denda harian harus berupa angka.',
+            'denda_harian.min' => 'Denda harian minimal 0.',
+
+            'id_kategori.required' => 'Kategori koleksi wajib dipilih.',
+            'id_kategori.exists' => 'Kategori koleksi tidak ditemukan.',
+
+            'deskripsi.required' => 'Deskripsi koleksi wajib diisi.',
+
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Cover harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
+
         ]);
 
         $koleksi = Koleksi::findOrFail(
@@ -277,6 +328,9 @@ class KoleksiController extends Controller
 
         $koleksi->update([
 
+            'kode_koleksi' =>
+                $request->kode_koleksi,
+
             'isbn' =>
                 $request->isbn,
 
@@ -298,8 +352,7 @@ class KoleksiController extends Controller
             'denda_harian' =>
                 $request->denda_harian,
 
-            'jenis_koleksi' =>
-                $request->jenis_koleksi,
+            'id_kategori' => $request->id_kategori,
 
             'deskripsi' =>
                 $request->deskripsi,
@@ -323,37 +376,41 @@ class KoleksiController extends Controller
 
     public function destroy($id_koleksi)
     {
-        $koleksi = Koleksi::findOrFail(
-            $id_koleksi
-        );
+        $koleksi = Koleksi::findOrFail($id_koleksi);
 
-        DB::transaction(function () use ($koleksi) {
+        // Cek apakah koleksi masih dipinjam
+        $masihDipinjam = DetailPeminjaman::join(
+            'peminjaman',
+            'detail_peminjaman.id_peminjaman',
+            '=',
+            'peminjaman.id_peminjaman'
+        )
+            ->where('detail_peminjaman.id_koleksi', $id_koleksi)
+            ->whereIn(
+                'peminjaman.status_peminjaman',
+                [
+                    'proses',
+                    'dipinjam'
+                ]
+            )
+            ->exists();
 
-            if (
-                $koleksi->gambar &&
-                file_exists(
-                    public_path(
-                        'uploads/koleksi/' .
-                        $koleksi->gambar
-                    )
-                )
-            ) {
+        if ($masihDipinjam) {
 
-                unlink(
-                    public_path(
-                        'uploads/koleksi/' .
-                        $koleksi->gambar
-                    )
+            return redirect('/admin/koleksi')
+                ->with(
+                    'error',
+                    'Koleksi tidak dapat dihapus karena masih memiliki transaksi peminjaman yang belum selesai.'
                 );
-            }
 
-            $koleksi->delete();
-        });
+        }
+
+        $koleksi->delete();
 
         return redirect('/admin/koleksi')
             ->with(
                 'success',
-                'Data koleksi berhasil dihapus'
+                'Koleksi berhasil dihapus dari daftar koleksi.'
             );
     }
 
@@ -383,14 +440,22 @@ class KoleksiController extends Controller
     {
         $request->validate([
 
-            'id_koleksi' =>
-                'required',
+            'id_koleksi' => 'required',
 
-            'stok_fisik' =>
-                'required|integer|min:0',
+            'stok_fisik' => 'required|integer|min:0',
 
-            'keterangan' =>
-                'nullable|string',
+            'keterangan' => 'nullable|string',
+
+        ], [
+
+            'id_koleksi.required' => 'Silakan pilih koleksi.',
+
+            'stok_fisik.required' => 'Stok fisik wajib diisi.',
+
+            'stok_fisik.integer' => 'Stok fisik harus berupa angka.',
+
+            'stok_fisik.min' => 'Nilai stok harus lebih besar atau sama dengan 0.',
+
         ]);
 
         $koleksi = Koleksi::findOrFail(
@@ -470,5 +535,15 @@ class KoleksiController extends Controller
                 'riwayat'
             )
         );
+    }
+
+    public function kategoriByJenis($id)
+    {
+        return KategoriKoleksi::where(
+            'id_jenis',
+            $id
+        )
+            ->orderBy('nama_kategori')
+            ->get();
     }
 }

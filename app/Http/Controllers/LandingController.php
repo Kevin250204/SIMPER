@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Koleksi;
 use App\Models\AnggotaPerpustakaan;
+use App\Models\JenisKoleksi;
+use Illuminate\Support\Facades\DB;
+use App\Models\DetailPeminjaman;
 
 class LandingController extends Controller
 {
@@ -13,7 +16,7 @@ class LandingController extends Controller
         $keyword = $request->keyword;
         $jenis = $request->jenis;
 
-        $query = Koleksi::query();
+        $query = Koleksi::with('kategori.jenis');
 
         /*
         |--------------------------------------------------------------------------
@@ -22,7 +25,11 @@ class LandingController extends Controller
         */
 
         if (!empty($jenis) && $jenis != 'Semua') {
-            $query->where('jenis_koleksi', $jenis);
+
+            $query->whereHas('kategori.jenis', function ($q) use ($jenis) {
+                $q->where('nama_jenis', $jenis);
+            });
+
         }
 
         /*
@@ -65,13 +72,25 @@ class LandingController extends Controller
             ->latest()
             ->paginate(10);
 
-        $jenisKoleksi = Koleksi::select('jenis_koleksi')
-            ->distinct()
-            ->pluck('jenis_koleksi');
+        $jenisKoleksi = JenisKoleksi::orderBy('nama_jenis')
+            ->pluck('nama_jenis');
 
         $totalKoleksi = Koleksi::count();
 
         $totalAnggota = AnggotaPerpustakaan::count();
+
+        $bukuPopuler = Koleksi::with('kategori.jenis')
+            ->withCount([
+                'detailPeminjaman as total_pinjam'
+            ])
+            ->orderByDesc('total_pinjam')
+            ->take(4)
+            ->get();
+
+        $bukuTerbaru = Koleksi::with('kategori.jenis')
+            ->orderByDesc('created_at')
+            ->take(4)
+            ->get();
 
         return view(
             'landing',
@@ -79,7 +98,9 @@ class LandingController extends Controller
                 'koleksis',
                 'jenisKoleksi',
                 'totalKoleksi',
-                'totalAnggota'
+                'totalAnggota',
+                'bukuPopuler',
+                'bukuTerbaru'
             )
         );
     }

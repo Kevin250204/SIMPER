@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit Anggota</title>
+    <title>Edit Kategori Koleksi</title>
 
     <style>
         * {
@@ -15,7 +15,6 @@
             margin: 0;
         }
 
-        /* ===== OVERLAY ===== */
         .overlay {
             position: fixed;
             inset: 0;
@@ -26,21 +25,21 @@
             padding: 20px;
         }
 
-        /* ===== CARD ===== */
         .modal-card {
             background: #fff;
-            width: 500px;
+            width: 550px;
             border-radius: 14px;
             padding: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
+            max-height: 95vh;
+            overflow-y: auto;
         }
 
-        /* ===== HEADER ===== */
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .modal-header h3 {
@@ -54,7 +53,6 @@
             color: #555;
         }
 
-        /* ===== LABEL ===== */
         label {
             display: block;
             margin-top: 14px;
@@ -64,10 +62,9 @@
             color: #333;
         }
 
-        /* ===== INPUT ===== */
         input,
-        textarea,
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 11px;
             border-radius: 8px;
@@ -75,25 +72,18 @@
             outline: none;
         }
 
-        textarea {
-            resize: none;
-            height: 80px;
-        }
-
         input:focus,
-        textarea:focus,
-        select:focus {
+        select:focus,
+        textarea:focus {
             border-color: #16a34a;
         }
 
-        /* ===== FOOTER ===== */
         .modal-footer {
             display: flex;
             justify-content: space-between;
             margin-top: 24px;
         }
 
-        /* ===== BUTTON ===== */
         .btn {
             padding: 10px 22px;
             border-radius: 8px;
@@ -116,7 +106,6 @@
             color: white;
         }
 
-        /* ===== ERROR ===== */
         .alert-error {
             background: #fee2e2;
             color: #991b1b;
@@ -125,15 +114,24 @@
             margin-bottom: 16px;
         }
 
+        small {
+            color: #666;
+            display: block;
+            margin-top: 5px;
+        }
+
         .text-error {
             display: block;
             margin-top: 5px;
             color: #dc2626;
             font-size: 13px;
+            font-weight: 500;
         }
 
-        .error {
-            border: 1px solid #dc2626 !important;
+        input.error,
+        select.error,
+        textarea.error {
+            border: 1px solid #dc2626;
         }
     </style>
 </head>
@@ -147,95 +145,63 @@
             <!-- HEADER -->
             <div class="modal-header">
 
-                <h3>
-                    ✏️ Edit Anggota
-                </h3>
+                <h3>✏️ Edit Kategori Koleksi</h3>
 
-                <a href="/admin/anggota" class="close-btn">
-
+                <a href="{{ route('kategori-koleksi.index') }}" class="close-btn">
                     &times;
-
                 </a>
 
             </div>
 
             <!-- FORM -->
-            <form action="/admin/anggota/{{ $anggota->id_anggota }}" method="POST">
+            <form action="{{ route('kategori-koleksi.update', $kategori->id_kategori) }}" method="POST"
+                enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
 
-                <!-- USERNAME -->
-                <label>Username</label>
+                <div class="mb-3">
+                    <label>Jenis Koleksi</label>
 
-                <input type="text" name="username" value="{{ $anggota->user->username }}">
-                @error('username')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
+                    <select name="id_jenis" class="form-control @error('id_jenis') error @enderror">
 
-                <!-- PASSWORD -->
-                <label>Password Baru (Opsional)</label>
+                        <option value="">-- Pilih Jenis Koleksi --</option>
 
-                <input type="password" name="password" placeholder="Kosongkan jika tidak diubah">
+                        @foreach($jenis as $item)
 
-                <!-- NIS -->
-                <label>NIS</label>
+                            <option value="{{ $item->id_jenis }}" {{ old('id_jenis', $kategori->id_jenis) == $item->id_jenis ? 'selected' : '' }}>
 
-                <input type="text" name="nis" value="{{ $anggota->nis }}">
-                @error('nis')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
+                                {{ $item->nama_jenis }}
 
-                <!-- NAMA -->
-                <label>Nama Lengkap</label>
+                            </option>
 
-                <input type="text" name="nama_lengkap" value="{{ $anggota->nama_lengkap }}">
-                @error('nama_lengkap')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
+                        @endforeach
 
-                <!-- KELAS -->
-                <label>Kelas Anggota</label>
+                    </select>
 
-                <input type="text" name="kelas_anggota" value="{{ $anggota->kelas_anggota }}">
-                @error('kelas_anggota')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
+                    @error('id_jenis')
+                        <small class="text-error">{{ $message }}</small>
+                    @enderror
 
-                <!-- JK -->
-                <label>Jenis Kelamin</label>
+                </div>
 
-                <select name="jenis_kelamin">
+                <div class="mb-3">
 
-                    <option value="L" {{ $anggota->jenis_kelamin == 'L' ? 'selected' : '' }}>
+                    <label>Nama Kategori Koleksi</label>
 
-                        Laki-laki
+                    <input type="text" name="nama_kategori" value="{{ old('nama_kategori', $kategori->nama_kategori) }}"
+                        class="form-control @error('nama_kategori') error @enderror">
 
-                    </option>
+                    @error('nama_kategori')
+                        <small class="text-error">{{ $message }}</small>
+                    @enderror
 
-                    <option value="P" {{ $anggota->jenis_kelamin == 'P' ? 'selected' : '' }}>
-
-                        Perempuan
-
-                    </option>
-
-                </select>
-                @error('jenis_kelamin')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
-
-                <!-- ALAMAT -->
-                <label>Alamat</label>
-
-                <textarea name="alamat">{{ $anggota->alamat }}</textarea>
-                @error('alamat')
-                    <small class="text-error">{{ $message }}</small>
-                @enderror
+                </div>
 
                 <!-- FOOTER -->
                 <div class="modal-footer">
 
-                    <a href="/admin/anggota" class="btn btn-cancel">
+                    <a href="{{ route('kategori-koleksi.index') }}" class="btn btn-cancel">
 
                         Batal
 

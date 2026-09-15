@@ -170,6 +170,20 @@ form button:hover {
     color: #d60000;
 }
 
+.text-error {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 5px;
+    display: block;
+}
+
+.card input {
+    width: 100%;
+    padding: 14px 16px;
+    box-sizing: border-box;
+}
+
 @media (max-width: 900px) {
     .profil-grid {
         grid-template-columns: 1fr;

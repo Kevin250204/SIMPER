@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manajemen Koleksi</title>
+    <title>Manajemen Jenis Koleksi</title>
 
     <link rel="stylesheet" href="{{ asset('css/pagination.css') }}">
 
@@ -137,16 +137,6 @@
         border-radius: 6px;
         border: 1px solid #ccc;
         width: 300px;
-    }
-
-    .search-box select {
-
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        min-width: 180px;
-        background: white;
-
     }
 
     .search-box button {
@@ -313,63 +303,24 @@
 
                 </h2>
 
-                <a href="/admin/stock-opname" class="btn-add btn-stock">
-                    📦 Stock Opname
-                </a>
-
-                <a href="/admin/koleksi/create" class="btn-add">
-                    + Tambah Koleksi
+                <a href="{{ route('jenis-koleksi.create') }}" class="btn-add">
+                    + Tambah Jenis Koleksi
                 </a>
 
             </div>
 
             <!-- SEARCH -->
-            <form method="GET" action="/admin/koleksi" class="search-box">
+            <form method="GET" action="{{ route('jenis-koleksi.index') }}" class="search-box">
 
-                <input type="text" name="search" placeholder="Cari koleksi..." value="{{ request('search') }}">
-
-                {{-- FILTER JENIS --}}
-                <select name="id_jenis" id="id_jenis">
-
-                    <option value="">-- Semua Jenis --</option>
-
-                    @foreach($jenis as $j)
-
-                    <option value="{{ $j->id_jenis }}" {{ request('id_jenis') == $j->id_jenis ? 'selected' : '' }}>
-                        {{ $j->nama_jenis }}
-                    </option>
-
-                    @endforeach
-
-                </select>
-
-                {{-- FILTER KATEGORI --}}
-                <select name="id_kategori" id="id_kategori">
-
-                    <option value="">-- Semua Kategori --</option>
-
-                    @foreach($kategori as $k)
-
-                    <option value="{{ $k->id_kategori }}"
-                        {{ request('id_kategori') == $k->id_kategori ? 'selected' : '' }}>
-                        {{ $k->nama_kategori }}
-                    </option>
-
-                    @endforeach
-
-                </select>
+                <input type="text" name="search" placeholder="Cari jenis koleksi..." value="{{ request('search') }}">
 
                 <button type="submit">
                     Cari
                 </button>
 
-                @if(
-                request('search') ||
-                request('id_jenis') ||
-                request('id_kategori')
-                )
+                @if(request('search'))
 
-                <a href="/admin/koleksi" class="reset-btn">
+                <a href="{{ route('jenis-koleksi.index') }}" class="reset-btn">
                     Reset
                 </a>
 
@@ -385,15 +336,14 @@
                     <tr>
 
                         <th>No</th>
-                        <th>Cover</th>
-                        <th>ISBN</th>
-                        <th>Judul Koleksi</th>
-                        <th>Penulis</th>
-                        <th>Jenis</th>
-                        <th>Kategori</th>
-                        <th>Denda</th>
-                        <th>Stok</th>
-                        <th width="230">Aksi</th>
+
+                        <th>Nama Jenis Koleksi</th>
+
+                        <th width="170">
+
+                            Aksi
+
+                        </th>
 
                     </tr>
 
@@ -401,84 +351,19 @@
 
                 <tbody>
 
-                    @forelse($koleksis as $i => $koleksi)
+                    @forelse($jenis as $item)
 
                     <tr>
 
-                        <td>{{ ($koleksis->currentPage() - 1) * $koleksis->perPage() + $loop->iteration }}</td>
-
-                        <!-- COVER -->
                         <td>
 
-                            @if($koleksi->gambar)
-
-                            <img src="{{ asset('uploads/koleksi/' . $koleksi->gambar) }}" class="cover">
-
-                            @else
-
-                            <div class="no-cover">
-                                No Image
-                            </div>
-
-                            @endif
-
-                        </td>
-
-                        <td>{{ $koleksi->isbn }}</td>
-
-                        <td>
-
-                            <strong>
-                                {{ $koleksi->judul_koleksi }}
-                            </strong>
-
-                            <br>
-
-                            <small style="color:#666;">
-                                {{ $koleksi->penerbit }}
-                            </small>
-
-                        </td>
-
-                        <td>{{ $koleksi->penulis }}</td>
-
-                        <td>
-
-                            <span class="badge badge-jenis">
-                                {{ $koleksi->kategori->jenis->nama_jenis }}
-                            </span>
+                            {{ ($jenis->currentPage() - 1) * $jenis->perPage() + $loop->iteration }}
 
                         </td>
 
                         <td>
-                            {{ $koleksi->kategori->nama_kategori }}
-                        </td>
 
-                        <td>
-                            Rp {{ number_format($koleksi->denda_harian, 0, ',', '.') }}
-                        </td>
-
-                        <td>
-
-                            @if($koleksi->stok > 5)
-
-                            <span class="badge stok-banyak">
-                                {{ $koleksi->stok }}
-                            </span>
-
-                            @elseif($koleksi->stok > 0)
-
-                            <span class="badge stok-sedikit">
-                                {{ $koleksi->stok }}
-                            </span>
-
-                            @else
-
-                            <span class="badge stok-habis">
-                                Habis
-                            </span>
-
-                            @endif
+                            {{ $item->nama_jenis }}
 
                         </td>
 
@@ -486,29 +371,19 @@
 
                             <div class="aksi">
 
-                                <a href="/admin/koleksi/{{ $koleksi->id_koleksi }}/detail" class="btn-detail">
-
-                                    Detail
-
-                                </a>
-
-                                <a href="/admin/koleksi/{{ $koleksi->id_koleksi }}/edit" class="btn-edit">
+                                <a href="{{ route('jenis-koleksi.edit', $item->id_jenis) }}" class="btn-edit">
 
                                     Edit
 
                                 </a>
 
-                                <form action="/admin/koleksi/{{ $koleksi->id_koleksi }}" method="POST" onsubmit="return confirm(
-                                                                'Hapus koleksi ini?\n\n' +
-                                                                '• Koleksi akan disembunyikan dari daftar koleksi.\n' +
-                                                                '• Riwayat peminjaman tetap tersimpan.\n\n' +
-                                                                'Lanjutkan?'
-                                                                )">
+                                <form action="{{ route('jenis-koleksi.destroy', $item->id_jenis) }}" method="POST">
 
                                     @csrf
+
                                     @method('DELETE')
 
-                                    <button type="submit" class="btn-delete">
+                                    <button class="btn-delete" onclick="return confirm('Hapus jenis koleksi?')">
 
                                         Hapus
 
@@ -526,9 +401,9 @@
 
                     <tr>
 
-                        <td colspan="9" style="text-align:center;padding:30px;">
+                        <td colspan="3">
 
-                            Tidak menemukan data koleksi
+                            Belum ada data jenis koleksi.
 
                         </td>
 
@@ -540,48 +415,11 @@
 
             </table>
 
-            <x-pagination :data="$koleksis" />
+            <x-pagination :data="$jenis" />
 
         </div>
 
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const jenis = document.getElementById('id_jenis');
-        const kategori = document.getElementById('id_kategori');
-
-        jenis.addEventListener('change', function() {
-
-            let idJenis = this.value;
-
-            kategori.innerHTML =
-                '<option value="">-- Semua Kategori --</option>';
-
-            if (idJenis == '') return;
-
-            fetch('/admin/kategori-by-jenis/' + idJenis)
-
-                .then(response => response.json())
-
-                .then(data => {
-
-                    data.forEach(function(item) {
-
-                        kategori.innerHTML +=
-                            `<option value="${item.id_kategori}">
-                        ${item.nama_kategori}
-                    </option>`;
-
-                    });
-
-                });
-
-        });
-
-    });
-    </script>
 
 </body>
 

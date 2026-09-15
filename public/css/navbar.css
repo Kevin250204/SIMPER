@@ -1,3 +1,7 @@
+/* ===========================
+   SIMPER NAVBAR
+   =========================== */
+
 section {
     scroll-margin-top: 100px;
 }
@@ -6,110 +10,202 @@ html {
     scroll-behavior: smooth;
 }
 
-.navbar {
+/* Reset hanya untuk navbar */
+.simper-navbar,
+.simper-navbar * {
+    box-sizing: border-box;
+}
+
+.simper-navbar a {
+    text-decoration: none;
+}
+
+.simper-navbar img {
+    display: block;
+    max-width: 100%;
+}
+
+.simper-navbar h2 {
+    margin: 0;
+}
+
+/* Navbar */
+
+.simper-navbar {
     position: sticky;
     top: 0;
-    z-index: 9999;
+    z-index: 99999;
 
-    background: #fff;
+    width: 100%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     padding: 18px 40px;
-    box-sizing: border-box;
+
+    background: #fff;
 
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+    font-family: "Segoe UI", sans-serif;
 }
 
-.nav-link {
-    text-decoration: none;
-    color: #222;
-    font-weight: 600;
-    transition: 0.3s;
-}
+/* Logo */
 
-.nav-link:hover {
-    color: #0f8248;
-}
-
-.nav-link.active {
-    color: #0f8248;
-}
-
-.logo {
+.simper-logo {
     display: flex;
     align-items: center;
     gap: 12px;
-    text-decoration: none;
+
+    flex-shrink: 0;
 }
 
-.logo img {
+.simper-logo img {
     width: 50px;
+    height: 50px;
+    object-fit: contain;
 }
 
-.logo h2 {
+.simper-logo h2 {
     color: #1f2937;
+    font-size: 18px;
+    font-weight: 700;
 }
 
-.menu {
+/* Menu */
+
+.simper-menu {
     display: flex;
+    align-items: center;
     gap: 40px;
 }
 
-.menu a {
-    text-decoration: none;
-    color: #222;
-    font-weight: 600;
-}
+/* Link */
 
-.btn-login {
-    background: #15803d;
-    color: white;
-    padding: 12px 30px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 600;
-    color: #333;
-}
-
-.logout-link {
-    background: #dc2626;
-    color: white;
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.logout-link:hover {
-    background: #b91c1c;
-}
-
-.nav-link {
+.simper-nav-link {
     position: relative;
-    display: inline-block;
+
+    color: #222;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: 0.3s;
 }
 
-.nav-link.active {
+.simper-nav-link:hover {
     color: #0f8248;
 }
 
-.nav-link.active::after {
+.simper-nav-link.active {
+    color: #0f8248;
+}
+
+.simper-nav-link.active::after {
     content: "";
+
     position: absolute;
+
     left: 0;
     bottom: -8px;
+
     width: 100%;
     height: 3px;
+
     background: #0f8248;
+
     border-radius: 20px;
+}
+
+/* User */
+
+.simper-user-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    flex-shrink: 0;
+}
+
+.simper-user-name {
+    color: #333;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+/* Tombol Login */
+
+.simper-btn-login {
+    background: #15803d;
+
+    color: #fff;
+
+    padding: 12px 30px;
+
+    border-radius: 8px;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+}
+
+.simper-btn-login:hover {
+    background: #166534;
+}
+
+/* Logout */
+
+.simper-logout-link {
+    background: #dc2626;
+
+    color: #fff;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.simper-logout-link:hover {
+    background: #b91c1c;
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+    .simper-navbar {
+        padding: 18px 24px;
+    }
+
+    .simper-menu {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .simper-navbar {
+        flex-direction: column;
+
+        gap: 20px;
+
+        padding: 20px;
+    }
+
+    .simper-menu {
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+
+    .simper-user-info {
+        flex-direction: column;
+    }
 }

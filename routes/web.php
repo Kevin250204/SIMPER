@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\KoleksiController;
+use App\Http\Controllers\JenisKoleksiController;
+use App\Http\Controllers\KategoriKoleksiController;
 use App\Http\Controllers\AnggotaPerpustakaanController;
 use App\Http\Controllers\PeminjamanAdminController;
 use App\Http\Controllers\PeminjamanAnggotaController;
@@ -156,6 +158,18 @@ Route::middleware([
         Route::resource(
             'koleksi',
             KoleksiController::class
+        );
+
+        Route::resource(
+            'jenis-koleksi',
+            JenisKoleksiController::class
+        );
+
+        Route::resource('kategori-koleksi', KategoriKoleksiController::class);
+
+        Route::get(
+            '/kategori-by-jenis/{id}',
+            [KoleksiController::class, 'kategoriByJenis']
         );
 
         /*

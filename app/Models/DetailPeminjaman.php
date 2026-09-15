@@ -62,7 +62,7 @@ class DetailPeminjaman extends Model
             Koleksi::class,
             'id_koleksi',
             'id_koleksi'
-        );
+        )->withTrashed();
     }
 
     /*

@@ -6,119 +6,133 @@
     <title>Tambah Koleksi</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
 
-        body {
-            margin: 0;
-        }
+    body {
+        margin: 0;
+    }
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #0b9444, #0f7f3b);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #0b9444, #0f7f3b);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
 
-        .modal-card {
-            background: #fff;
-            width: 550px;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
-            max-height: 95vh;
-            overflow-y: auto;
-        }
+    .modal-card {
+        background: #fff;
+        width: 550px;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
+        max-height: 95vh;
+        overflow-y: auto;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-        .modal-header h3 {
-            margin: 0;
-            color: #166534;
-        }
+    .modal-header h3 {
+        margin: 0;
+        color: #166534;
+    }
 
-        .close-btn {
-            text-decoration: none;
-            font-size: 24px;
-            color: #555;
-        }
+    .close-btn {
+        text-decoration: none;
+        font-size: 24px;
+        color: #555;
+    }
 
-        label {
-            display: block;
-            margin-top: 14px;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-        }
+    label {
+        display: block;
+        margin-top: 14px;
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+    }
 
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 11px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            outline: none;
-        }
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 11px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #16a34a;
-        }
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #16a34a;
+    }
 
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-        }
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+    }
 
-        .btn {
-            padding: 10px 22px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    .btn {
+        padding: 10px 22px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-        .btn-cancel {
-            background: #eee;
-            color: #333;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .btn-cancel {
+        background: #eee;
+        color: #333;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .btn-save {
-            background: #16a34a;
-            color: white;
-        }
+    .btn-save {
+        background: #16a34a;
+        color: white;
+    }
 
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
 
-        small {
-            color: #666;
-            display: block;
-            margin-top: 5px;
-        }
+    small {
+        color: #666;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .text-error {
+        display: block;
+        margin-top: 5px;
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    input.error,
+    select.error,
+    textarea.error {
+        border: 1px solid #dc2626;
+    }
     </style>
 </head>
 
@@ -139,100 +153,139 @@
 
             </div>
 
-            <!-- ERROR -->
-            @if($errors->any())
-
-                <div class="alert-error">
-
-                    <ul style="margin:0;padding-left:18px;">
-
-                        @foreach($errors->all() as $error)
-
-                            <li>{{ $error }}</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
-
             <!-- FORM -->
             <form action="/admin/koleksi" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
-                <!-- ISBN -->
-                <label>ISBN</label>
+                <label>Kode Koleksi</label>
 
-                <input type="text" name="isbn" value="{{ old('isbn') }}" required>
+                <input type="text" name="kode_koleksi" value="{{ old('kode_koleksi') }}"
+                    class="@error('kode_koleksi') error @enderror">
+
+                @error('kode_koleksi')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
+
+                <!-- ISBN -->
+                <label>ISBN (Opsional)</label>
+
+                <input type="text" name="isbn" value="{{ old('isbn') }}"
+                    placeholder="Kosongkan jika koleksi tidak memiliki ISBN" class="@error('isbn') error @enderror">
+                @error('isbn')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- JUDUL -->
                 <label>Judul Koleksi</label>
 
-                <input type="text" name="judul_koleksi" value="{{ old('judul_koleksi') }}" required>
+                <input type="text" name="judul_koleksi" value="{{ old('judul_koleksi') }}">
+                @error('judul_koleksi')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- PENULIS -->
                 <label>Penulis</label>
 
-                <input type="text" name="penulis" value="{{ old('penulis') }}" required>
+                <input type="text" name="penulis" value="{{ old('penulis') }}">
+                @error('penulis')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- PENERBIT -->
                 <label>Penerbit</label>
 
-                <input type="text" name="penerbit" value="{{ old('penerbit') }}" required>
+                <input type="text" name="penerbit" value="{{ old('penerbit') }}">
+                @error('penerbit')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- TAHUN -->
                 <label>Tahun Terbit</label>
 
-                <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit') }}" required>
+                <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit') }}">
+                @error('tahun_terbit')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- STOK -->
                 <label>Stok</label>
 
-                <input type="number" name="stok" min="0" value="{{ old('stok') }}" required>
+                <input type="number" name="stok" min="0" value="{{ old('stok') }}">
+                @error('stok')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- DENDA -->
                 <label>Denda Harian</label>
 
                 <input type="number" name="denda_harian" min="0" value="{{ old('denda_harian') }}"
-                    placeholder="Contoh: 1000" required>
+                    placeholder="Contoh: 1000">
+                @error('denda_harian')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- JENIS -->
                 <label>Jenis Koleksi</label>
 
-                <select name="jenis_koleksi" required>
+                <select name="id_jenis" id="id_jenis" class="@error('id_jenis') error @enderror">
 
-                    <option value="">-- Pilih Jenis --</option>
+                    <option value="">-- Pilih Jenis Koleksi --</option>
 
-                    <option value="Buku" {{ old('jenis_koleksi') == 'Buku' ? 'selected' : '' }}>
-                        Buku
+                    @foreach($jenis as $item)
+
+                    <option value="{{ $item->id_jenis }}" {{ old('id_jenis') == $item->id_jenis ? 'selected' : '' }}>
+
+                        {{ $item->nama_jenis }}
+
                     </option>
 
-                    <option value="Majalah" {{ old('jenis_koleksi') == 'Majalah' ? 'selected' : '' }}>
-                        Majalah
-                    </option>
-
-                    <option value="Jurnal" {{ old('jenis_koleksi') == 'Jurnal' ? 'selected' : '' }}>
-                        Jurnal
-                    </option>
-
-                    <option value="Novel" {{ old('jenis_koleksi') == 'Novel' ? 'selected' : '' }}>
-                        Novel
-                    </option>
+                    @endforeach
 
                 </select>
+
+                @error('id_jenis')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
+
+                <label>Kategori Koleksi</label>
+
+                <select name="id_kategori" id="id_kategori" class="@error('id_kategori') error @enderror">
+
+                    <option value="">-- Pilih Kategori Koleksi --</option>
+
+                    @foreach($kategori as $item)
+
+                    <option value="{{ $item->id_kategori }}" data-jenis="{{ $item->id_jenis }}"
+                        {{ old('id_kategori') == $item->id_kategori ? 'selected' : '' }}>
+
+                        {{ $item->nama_kategori }}
+
+                    </option>
+
+                    @endforeach
+
+                </select>
+
+                @error('id_kategori')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Deskripsi Koleksi</label>
 
                 <textarea name="deskripsi" rows="5"
                     placeholder="Masukkan deskripsi koleksi...">{{ old('deskripsi') }}</textarea>
+                @error('deskripsi')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <!-- GAMBAR -->
                 <label>Cover Koleksi</label>
 
                 <input type="file" name="gambar" accept=".jpg,.jpeg,.png,image/*">
+                @error('gambar')
+                <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <small>
                     Format yang diperbolehkan: JPG, JPEG, PNG (maksimal 2 MB)
@@ -260,6 +313,42 @@
         </div>
 
     </div>
+
+    <script>
+    const jenisSelect = document.getElementById('id_jenis');
+    const kategoriSelect = document.getElementById('id_kategori');
+
+    function filterKategori() {
+
+        const idJenis = jenisSelect.value;
+
+        Array.from(kategoriSelect.options).forEach(function(option) {
+
+            if (option.value == "") {
+                option.hidden = false;
+                return;
+            }
+
+            if (option.dataset.jenis == idJenis) {
+                option.hidden = false;
+            } else {
+                option.hidden = true;
+            }
+
+        });
+
+    }
+
+    filterKategori();
+
+    jenisSelect.addEventListener('change', function() {
+
+        kategoriSelect.value = '';
+
+        filterKategori();
+
+    });
+    </script>
 
 </body>
 

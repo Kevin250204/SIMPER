@@ -114,6 +114,24 @@
         .back-btn:hover {
             text-decoration: underline;
         }
+
+        .text-error {
+
+            display: block;
+
+            margin-top: 6px;
+
+            color: #dc2626;
+
+            font-size: 13px;
+
+        }
+
+        .input-error {
+
+            border: 1px solid #dc2626 !important;
+
+        }
     </style>
 </head>
 
@@ -143,17 +161,40 @@
 
             <div class="form-group">
                 <label>Password Lama</label>
-                <input type="password" name="password_lama" required>
+                <input type="password" name="password_lama" placeholder="Masukkan password lama"
+                    autocomplete="current-password" class="@error('password_lama') input-error @enderror">
+
+                @error('password_lama')
+
+                    <small class="text-error">
+
+                        {{ $message }}
+
+                    </small>
+
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>Password Baru</label>
-                <input type="password" name="password_baru" required>
+                <input type="password" name="password_baru" placeholder="Masukkan password baru"
+                    autocomplete="new-password" class="@error('password_baru') input-error @enderror">
+
+                @error('password_baru')
+
+                    <small class="text-error">
+
+                        {{ $message }}
+
+                    </small>
+
+                @enderror
             </div>
 
             <div class="form-group">
                 <label>Konfirmasi Password Baru</label>
-                <input type="password" name="password_baru_confirmation" required>
+                <input type="password" name="password_baru_confirmation" placeholder="Konfirmasi password baru"
+                    autocomplete="new-password">
             </div>
 
             <button type="submit" class="btn">

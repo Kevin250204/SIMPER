@@ -88,6 +88,66 @@
         outline: none;
     }
 
+    .search-box select {
+
+        width: 220px;
+
+        height: 48px;
+
+        border: 1px solid #d1d5db;
+
+        border-radius: 12px;
+
+        padding: 0 14px;
+
+        font-size: 14px;
+
+        background: white;
+
+        outline: none;
+
+    }
+
+    .btn-reset {
+
+        width: 120px;
+
+        height: 48px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        text-decoration: none;
+
+        border-radius: 12px;
+
+        background: #64748b;
+
+        color: white;
+
+        font-weight: 600;
+
+        transition: .2s;
+
+    }
+
+    .btn-reset:hover {
+
+        background: #475569;
+
+    }
+
+    .search-box select:focus {
+
+        border-color: #0b9444;
+
+        box-shadow: 0 0 0 3px rgba(11, 148, 68, .1);
+
+    }
+
     .search-box input:focus {
 
         border-color: #0b9444;
@@ -460,14 +520,55 @@
 
                 <div class="search-box">
 
-                    <input type="text" name="search" placeholder="Cari nama anggota, NIS, judul koleksi, atau status..."
+                    <input type="text" name="search" placeholder="Cari nama anggota, NIS, judul koleksi..."
                         value="{{ request('search') }}">
 
+                    <select name="status">
+
+                        <option value="">Semua Status</option>
+
+                        <option value="proses" {{ request('status') == 'proses' ? 'selected' : '' }}>
+                            Menunggu Persetujuan
+                        </option>
+
+                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>
+                            Dipinjam
+                        </option>
+
+                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>
+                            Ditolak
+                        </option>
+
+                        <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>
+                            Terlambat
+                        </option>
+                        <option value="rusak" {{ request('status') == 'rusak' ? 'selected' : '' }}>
+                            Rusak
+                        </option>
+
+                        <option value="hilang" {{ request('status') == 'hilang' ? 'selected' : '' }}>
+                            Hilang
+                        </option>
+
+                    </select>
+
                     <button type="submit">
-
                         🔍 Cari
-
                     </button>
+
+                    @if(request('search') || request('status'))
+
+                    <a href="{{ url('/admin/peminjaman') }}" class="btn-reset">
+
+                        Reset
+
+                    </a>
+
+                    @endif
 
                 </div>
 
@@ -601,10 +702,11 @@
                                 <div class="aksi">
 
                                     <!-- DETAIL -->
-                                    <a href="/admin/peminjaman/{{ $peminjaman->id_peminjaman }}" class="btn btn-detail">
-
+                                    <a href="{{ route('admin.peminjaman.detail', [
+    'id' => $peminjaman->id_peminjaman,
+    'redirect' => url()->full()
+]) }}" class="btn btn-detail">
                                         Detail
-
                                     </a>
 
                                     <!-- APPROVE -->

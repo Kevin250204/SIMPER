@@ -1,58 +1,61 @@
-<div class="navbar">
+<div class="simper-navbar">
 
-    <a href="{{ route('landing') }}" class="logo">
-        <img src="{{ asset('images/logo.png') }}">
+    <!-- Logo -->
+    <a href="{{ route('landing') }}" class="simper-logo">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo SIMPER">
         <h2>SIMPER</h2>
     </a>
 
-    <div class="menu">
+    <!-- Menu -->
+    <div class="simper-menu">
 
-        <a href="{{ route('landing') }}#katalog" class="nav-link
-   {{ request()->routeIs('landing') ? 'landing-link' : '' }}">
+        <a href="{{ route('landing') }}#katalog"
+            class="simper-nav-link {{ request()->routeIs('landing') ? 'landing-link' : '' }}">
             Katalog
         </a>
 
-        <a href="{{ route('menu.peminjaman') }}" class="nav-link
-{{ request()->routeIs('menu.peminjaman') || request()->routeIs('anggota.peminjaman') ? 'active' : '' }}">
+        <a href="{{ route('menu.peminjaman') }}"
+            class="simper-nav-link {{ request()->routeIs('menu.peminjaman') || request()->routeIs('anggota.peminjaman') ? 'active' : '' }}">
             Peminjaman
         </a>
 
-        <a href="#panduan" class="nav-link">
+        {{-- Jika nanti ingin ditampilkan --}}
+        {{--
+        <a href="#panduan" class="simper-nav-link">
             Panduan
         </a>
+        --}}
 
         <a href="{{ route('anggota.profil') }}"
-            class="nav-link {{ request()->routeIs('anggota.profil') ? 'active' : '' }}">
+            class="simper-nav-link {{ request()->routeIs('anggota.profil') ? 'active' : '' }}">
             Profil Saya
         </a>
 
-
     </div>
 
+    <!-- User -->
     @if(session('role') == 'anggota')
 
-        <div class="user-info">
+        <div class="simper-user-info">
 
-            👋 Halo, {{ session('nama_lengkap') }}
+            <span class="simper-user-name">
+                👋 Halo, {{ session('nama_lengkap') }}
+            </span>
 
-            <a href="{{ route('logout') }}" class="logout-link"
+            <a href="{{ route('logout') }}" class="simper-logout-link"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-
                 Logout
-
             </a>
 
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-
                 @csrf
-
             </form>
 
         </div>
 
     @else
 
-        <a href="{{ route('login') }}" class="btn-login">
+        <a href="{{ route('login') }}" class="simper-btn-login">
             Masuk
         </a>
 

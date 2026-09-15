@@ -19,6 +19,9 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required',
             'password' => 'required',
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
         // cari user
@@ -35,19 +38,20 @@ class AuthController extends Controller
             )
         ) {
 
-            return back()->with(
-                'error',
-                'Username atau password salah'
-            );
+            return back()
+                ->withInput($request->only('username'))
+                ->with(
+                    'error',
+                    'Username atau password salah'
+                );
         }
 
         // cek status aktif
         if (!$user->status_aktif) {
 
-            return back()->with(
-                'error',
-                'Akun tidak aktif'
-            );
+            return back()
+                ->withInput($request->only('username'))
+                ->with('error', 'Akun tidak aktif.');
         }
 
         /*
@@ -103,6 +107,7 @@ class AuthController extends Controller
             'Role tidak valid'
         );
     }
+
 
     public function logout()
     {

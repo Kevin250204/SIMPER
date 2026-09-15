@@ -1,3 +1,8 @@
+@props([
+    'data',
+    'anchor' => null
+])
+
 <div class="pagination-wrapper">
 
     <div class="pagination-info">
@@ -10,6 +15,14 @@
         data
     </div>
 
-    {{ $data->links() }}
+    @if($anchor)
+
+        {{ $data->fragment($anchor)->links() }}
+
+    @else
+
+        {{ $data->links() }}
+
+    @endif
 
 </div>

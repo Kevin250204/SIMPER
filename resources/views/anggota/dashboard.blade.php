@@ -6,162 +6,162 @@
     <title>Dashboard Anggota</title>
 
     <style>
-    * {
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-    }
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-    body {
-        margin: 0;
-        background: #f4f6f8;
-    }
+        body {
+            margin: 0;
+            background: #f4f6f8;
+        }
 
-    /* ===== LAYOUT ===== */
-    .wrapper {
-        display: flex;
-        min-height: 100vh;
-    }
+        /* ===== LAYOUT ===== */
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-        width: 240px;
-        background: linear-gradient(180deg, #0b9444, #0a6c34);
-        color: white;
-        padding: 20px;
-    }
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, #0b9444, #0a6c34);
+            color: white;
+            padding: 20px;
+        }
 
-    .logo-box {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, .25);
-    }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, .25);
+        }
 
-    .logo-box img {
-        width: 56px;
-        height: 56px;
-        object-fit: contain;
-    }
+        .logo-box img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
 
-    .logo-text h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 700;
-    }
+        .logo-text h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
 
-    .logo-text p {
-        margin: 2px 0;
-        font-size: 12px;
-        opacity: 0.9;
-    }
+        .logo-text p {
+            margin: 2px 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
 
-    .logo-text span {
-        font-size: 11px;
-        opacity: 0.85;
-    }
+        .logo-text span {
+            font-size: 11px;
+            opacity: 0.85;
+        }
 
-    .menu a {
-        display: block;
-        padding: 12px 14px;
-        margin-bottom: 8px;
-        border-radius: 8px;
-        color: white;
-        text-decoration: none;
-    }
+        .menu a {
+            display: block;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+        }
 
-    .menu a.active,
-    .menu a:hover {
-        background: rgba(255, 255, 255, .2);
-    }
+        .menu a.active,
+        .menu a:hover {
+            background: rgba(255, 255, 255, .2);
+        }
 
-    /* ===== CONTENT ===== */
-    .content {
-        flex: 1;
-        background: white;
-        padding: 24px 30px;
-    }
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            background: white;
+            padding: 24px 30px;
+        }
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    h2 {
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+        h2 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    /* ===== SEARCH ===== */
-    .search-box {
-        margin-bottom: 16px;
-    }
+        /* ===== SEARCH ===== */
+        .search-box {
+            margin-bottom: 16px;
+        }
 
-    .search-box input {
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        width: 300px;
-    }
+        .search-box input {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
 
-    .search-box button {
-        padding: 8px 14px;
-        background: #198754;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
+        .search-box button {
+            padding: 8px 14px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
-    /* ===== TABLE ===== */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    thead {
-        background: #e9f7ef;
-    }
+        thead {
+            background: #e9f7ef;
+        }
 
-    th,
-    td {
-        padding: 12px;
-        border-bottom: 1px solid #eee;
-        font-size: 14px;
-        text-align: left;
-    }
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            text-align: left;
+        }
 
-    th {
-        color: #166534;
-    }
+        th {
+            color: #166534;
+        }
 
-    tbody tr:hover {
-        background: #f9fafb;
-    }
+        tbody tr:hover {
+            background: #f9fafb;
+        }
 
-    /* ===== BUTTON ===== */
-    .btn-pinjam {
-        background: #16a34a;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
+        /* ===== BUTTON ===== */
+        .btn-pinjam {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
-    /* ===== ALERT ===== */
-    .alert-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-    }
+        /* ===== ALERT ===== */
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 
@@ -185,7 +185,7 @@
             <div class="menu">
 
                 <a href="/anggota/dashboard" class="active">
-                    🏠 Dashboard
+                    🏠 Dashboardadfadsf
                 </a>
 
                 <a href="/anggota/peminjaman">
@@ -202,9 +202,9 @@
             @include('partials.navbar-anggota')
 
             @if(session('success'))
-            <div class="alert-success">
-                {{ session('success') }}
-            </div>
+                <div class="alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
 
             <div class="header">
@@ -241,41 +241,41 @@
 
                     @forelse($koleksis as $i => $koleksi)
 
-                    <tr>
+                        <tr>
 
-                        <td>{{ $i + 1 }}</td>
+                            <td>{{ $i + 1 }}</td>
 
-                        <td>{{ $koleksi->judul_koleksi }}</td>
+                            <td>{{ $koleksi->judul_koleksi }}</td>
 
-                        <td>{{ $koleksi->penulis }}</td>
+                            <td>{{ $koleksi->penulis }}</td>
 
-                        <td>{{ $koleksi->penerbit }}</td>
+                            <td>{{ $koleksi->penerbit }}</td>
 
-                        <td>{{ $koleksi->stok }}</td>
+                            <td>{{ $koleksi->stok }}</td>
 
-                        <td>
+                            <td>
 
-                            <form action="/anggota/pinjam/{{ $koleksi->id_koleksi }}" method="POST">
+                                <form action="/anggota/pinjam/{{ $koleksi->id_koleksi }}" method="POST">
 
-                                @csrf
+                                    @csrf
 
-                                <button class="btn-pinjam">
-                                    Pinjam
-                                </button>
+                                    <button class="btn-pinjam">
+                                        Pinjam
+                                    </button>
 
-                            </form>
+                                </form>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                        </tr>
 
                     @empty
 
-                    <tr>
-                        <td colspan="6" style="text-align:center;">
-                            Koleksi tidak ditemukan
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="6" style="text-align:center;">
+                                Koleksi tidak ditemukan
+                            </td>
+                        </tr>
 
                     @endforelse
 

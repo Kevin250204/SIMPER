@@ -182,9 +182,19 @@
 
                 </div>
 
-                <a href="{{ route('admin.laporan.pdf', request()->query()) }}" class="btn-pdf">
-                    🖨 Cetak PDF
-                </a>
+                @if($laporan->count() > 0)
+                    <a href="{{ route('admin.laporan.pdf', request()->query()) }}" class="btn-pdf">
+                        🖨 Cetak PDF
+                    </a>
+                @else
+                            <button class="btn-pdf" disabled style="
+                        background:#9ca3af;
+                        cursor:not-allowed;
+                        opacity:.7;
+                    " title="Tidak ada data yang dapat dicetak">
+                                🖨 Cetak PDF
+                            </button>
+                @endif
 
             </div>
 

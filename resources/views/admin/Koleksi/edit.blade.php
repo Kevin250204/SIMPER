@@ -126,6 +126,20 @@
             margin-top: 8px;
             margin-bottom: 10px;
         }
+
+        .text-error {
+            display: block;
+            margin-top: 5px;
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        input.error,
+        select.error,
+        textarea.error {
+            border: 1px solid #dc2626;
+        }
     </style>
 </head>
 
@@ -143,80 +157,123 @@
                 </a>
             </div>
 
-            @if($errors->any())
-
-                <div class="alert-error">
-
-                    <ul style="margin:0;padding-left:18px;">
-
-                        @foreach($errors->all() as $error)
-
-                            <li>{{ $error }}</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
-
             <form action="/admin/koleksi/{{ $koleksi->id_koleksi }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
 
+                <label>Kode Koleksi</label>
+
+                <input type="text" name="kode_koleksi" value="{{ old('kode_koleksi', $koleksi->kode_koleksi) }}"
+                    class="@error('kode_koleksi') error @enderror">
+
+                @error('kode_koleksi')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
+
                 <label>ISBN</label>
-                <input type="text" name="isbn" value="{{ old('isbn', $koleksi->isbn) }}" required>
+                <input type="text" name="isbn" value="{{ old('isbn', $koleksi->isbn) }}">
+                @error('isbn')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Judul Koleksi</label>
-                <input type="text" name="judul_koleksi" value="{{ old('judul_koleksi', $koleksi->judul_koleksi) }}"
-                    required>
+                <input type="text" name="judul_koleksi" value="{{ old('judul_koleksi', $koleksi->judul_koleksi) }}">
+                @error('judul_koleksi')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Penulis</label>
-                <input type="text" name="penulis" value="{{ old('penulis', $koleksi->penulis) }}" required>
+                <input type="text" name="penulis" value="{{ old('penulis', $koleksi->penulis) }}">
+                @error('penulis')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Penerbit</label>
-                <input type="text" name="penerbit" value="{{ old('penerbit', $koleksi->penerbit) }}" required>
+                <input type="text" name="penerbit" value="{{ old('penerbit', $koleksi->penerbit) }}">
+                @error('penerbit')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Tahun Terbit</label>
-                <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit', $koleksi->tahun_terbit) }}"
-                    required>
+                <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit', $koleksi->tahun_terbit) }}">
+                @error('tahun_terbit')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Stok</label>
-                <input type="number" name="stok" min="0" value="{{ old('stok', $koleksi->stok) }}" required>
+                <input type="number" name="stok" min="0" value="{{ old('stok', $koleksi->stok) }}">
+                @error('stok')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Denda Harian</label>
                 <input type="number" name="denda_harian" min="0"
-                    value="{{ old('denda_harian', $koleksi->denda_harian) }}" required>
+                    value="{{ old('denda_harian', $koleksi->denda_harian) }}">
+                @error('denda_harian')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Jenis Koleksi</label>
 
-                <select name="jenis_koleksi" required>
+                <select name="id_jenis" id="id_jenis" class="@error('id_jenis') error @enderror">
 
-                    <option value="">-- Pilih Jenis --</option>
+                    <option value="">-- Pilih Jenis Koleksi --</option>
 
-                    <option value="Buku" {{ $koleksi->jenis_koleksi == 'Buku' ? 'selected' : '' }}>
-                        Buku
-                    </option>
+                    @foreach($jenis as $item)
 
-                    <option value="Majalah" {{ $koleksi->jenis_koleksi == 'Majalah' ? 'selected' : '' }}>
-                        Majalah
-                    </option>
+                                    <option value="{{ $item->id_jenis }}" {{
+                        old('id_jenis', $idJenisTerpilih)
+                        == $item->id_jenis
+                        ? 'selected'
+                        : ''
+                                        }}>
 
-                    <option value="Jurnal" {{ $koleksi->jenis_koleksi == 'Jurnal' ? 'selected' : '' }}>
-                        Jurnal
-                    </option>
+                                        {{ $item->nama_jenis }}
 
-                    <option value="Novel" {{ $koleksi->jenis_koleksi == 'Novel' ? 'selected' : '' }}>
-                        Novel
-                    </option>
+                                    </option>
+
+                    @endforeach
 
                 </select>
+
+                @error('id_jenis')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
+
+                <label>Kategori Koleksi</label>
+
+                <select name="id_kategori" id="id_kategori" class="@error('id_kategori') error @enderror">
+
+                    <option value="">-- Pilih Kategori Koleksi --</option>
+
+                    @foreach($kategori as $item)
+
+                                    <option value="{{ $item->id_kategori }}" data-jenis="{{ $item->id_jenis }}" {{
+                        old('id_kategori', $koleksi->id_kategori)
+                        == $item->id_kategori
+                        ? 'selected'
+                        : ''
+                                        }}>
+
+                                        {{ $item->nama_kategori }}
+
+                                    </option>
+
+                    @endforeach
+
+                </select>
+
+                @error('id_kategori')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Deskripsi Koleksi</label>
 
                 <textarea name="deskripsi" rows="5">{{ old('deskripsi', $koleksi->deskripsi) }}</textarea>
+                @error('deskripsi')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <label>Cover Saat Ini</label>
 
@@ -233,6 +290,9 @@
                 <label>Ganti Gambar</label>
 
                 <input type="file" name="gambar" accept="image/*">
+                @error('gambar')
+                    <small class="text-error">{{ $message }}</small>
+                @enderror
 
                 <small>
                     Format: JPG, JPEG, PNG (Maks 2MB)
@@ -259,6 +319,53 @@
         </div>
 
     </div>
+
+    <script>
+        const jenisSelect = document.getElementById('id_jenis');
+        const kategoriSelect = document.getElementById('id_kategori');
+
+        const semuaKategori = Array.from(
+            kategoriSelect.querySelectorAll('option')
+        );
+
+        function filterKategori() {
+
+            const idJenis = jenisSelect.value;
+
+            kategoriSelect.innerHTML = '';
+
+            const placeholder = document.createElement('option');
+
+            placeholder.value = '';
+
+            placeholder.textContent = '-- Pilih Kategori Koleksi --';
+
+            kategoriSelect.appendChild(placeholder);
+
+            semuaKategori.forEach(function (option) {
+
+                if (option.value === '') return;
+
+                if (option.dataset.jenis === idJenis) {
+
+                    kategoriSelect.appendChild(option);
+
+                }
+
+            });
+
+        }
+
+        jenisSelect.addEventListener('change', function () {
+
+            kategoriSelect.selectedIndex = 0;
+
+            filterKategori();
+
+        });
+
+        window.addEventListener('load', filterKategori);
+    </script>
 
 </body>
 

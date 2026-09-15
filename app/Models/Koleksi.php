@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\KategoriKoleksi;
 
 class Koleksi extends Model
 {
@@ -11,6 +13,7 @@ class Koleksi extends Model
     | TABLE
     |--------------------------------------------------------------------------
     */
+    use SoftDeletes;
 
     protected $table = 'koleksis';
 
@@ -23,25 +26,16 @@ class Koleksi extends Model
     */
 
     protected $fillable = [
-
+        'kode_koleksi',
+        'id_kategori',
         'isbn',
-
         'judul_koleksi',
-
         'penulis',
-
         'penerbit',
-
         'tahun_terbit',
-
         'stok',
-
         'denda_harian',
-
-        'jenis_koleksi',
-
         'deskripsi',
-
         'gambar'
     ];
 
@@ -72,6 +66,15 @@ class Koleksi extends Model
             StockOpname::class,
             'id_koleksi',
             'id_koleksi'
+        );
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(
+            KategoriKoleksi::class,
+            'id_kategori',
+            'id_kategori'
         );
     }
 

@@ -74,26 +74,33 @@ class AnggotaPerpustakaanController extends Controller
     {
         $request->validate([
 
-            'username' =>
-                'required|unique:users,username',
+            'username' => 'required|unique:users,username',
+            'password' => 'required|min:6',
+            'nis' => 'required|unique:anggota_perpustakaan,nis',
+            'nama_lengkap' => 'required|string|max:255',
+            'kelas_anggota' => 'required|string|max:50',
+            'jenis_kelamin' => 'required',
+            'alamat' => 'required|string',
 
-            'password' =>
-                'required|min:6',
+        ], [
 
-            'nis' =>
-                'required|unique:anggota_perpustakaan,nis',
+            'username.required' => 'Username wajib diisi.',
+            'username.unique' => 'Username sudah digunakan.',
 
-            'nama_lengkap' =>
-                'required|string|max:255',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
 
-            'kelas_anggota' =>
-                'required|string|max:50',
+            'nis.required' => 'NIS wajib diisi.',
+            'nis.unique' => 'NIS sudah digunakan.',
 
-            'jenis_kelamin' =>
-                'required',
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
 
-            'alamat' =>
-                'required|string',
+            'kelas_anggota.required' => 'Kelas anggota wajib diisi.',
+
+            'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
+
+            'alamat.required' => 'Alamat wajib diisi.',
+
         ]);
 
         DB::transaction(function () use ($request) {
@@ -190,27 +197,34 @@ class AnggotaPerpustakaanController extends Controller
 
         $request->validate([
 
-            'username' =>
-                'required|unique:users,username,' .
-                $anggota->user->id_user .
-                ',id_user',
+            'username' => 'required|unique:users,username,' . $anggota->user->id_user . ',id_user',
 
-            'nis' =>
-                'required|unique:anggota_perpustakaan,nis,' .
-                $id_anggota .
-                ',id_anggota',
+            'nis' => 'required|unique:anggota_perpustakaan,nis,' . $id_anggota . ',id_anggota',
 
-            'nama_lengkap' =>
-                'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
 
-            'kelas_anggota' =>
-                'required|string|max:50',
+            'kelas_anggota' => 'required|string|max:50',
 
-            'jenis_kelamin' =>
-                'required',
+            'jenis_kelamin' => 'required',
 
-            'alamat' =>
-                'required|string',
+            'alamat' => 'required|string',
+
+        ], [
+
+            'username.required' => 'Username wajib diisi.',
+            'username.unique' => 'Username sudah digunakan.',
+
+            'nis.required' => 'NIS wajib diisi.',
+            'nis.unique' => 'NIS sudah digunakan.',
+
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+
+            'kelas_anggota.required' => 'Kelas anggota wajib diisi.',
+
+            'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
+
+            'alamat.required' => 'Alamat wajib diisi.',
+
         ]);
 
         DB::transaction(function () use ($request, $anggota) {
